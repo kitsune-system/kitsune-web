@@ -11,11 +11,19 @@ extends:
 parser: babel-eslint
 
 rules:
+  curly:
+    - error
+    - multi-or-nest
+    - consistent
   keyword-spacing:
     - error
     - overrides:
         if:
           after: false
+  no-return-assign: off
   object-curly-spacing:
     - error
     - always
+  react/jsx-handler-names:
+    - error
+    - eventHandlerPrefix: on
