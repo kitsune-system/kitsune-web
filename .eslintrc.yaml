@@ -1,0 +1,21 @@
+root: true
+
+env:
+  browser: true,
+  mocha: true
+
+extends:
+  - xo-react/space
+  - xo-space/esnext
+
+parser: babel-eslint
+
+rules:
+  keyword-spacing:
+    - error
+    - overrides:
+        if:
+          after: false
+  object-curly-spacing:
+    - error
+    - always

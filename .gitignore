@@ -1,0 +1,8 @@
+/.nyc_output
+/.tmp
+/coverage
+/dist
+/node_modules
+
+# Ignore IntelliJ files
+/*.iml

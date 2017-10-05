@@ -1,0 +1,40 @@
+{
+  "dependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-istanbul": "^4.1.5",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.7",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.1",
+    "eslint": "^4.8.0",
+    "eslint-config-xo-react": "^0.13.0",
+    "eslint-config-xo-space": "^0.16.0",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-react": "^7.4.0",
+    "html-webpack-plugin": "^2.30.1",
+    "mocha": "^3.5.3",
+    "mocha-webpack": "^0.7.0",
+    "node-sass": "^4.5.3",
+    "nyc": "^11.2.1",
+    "react-hot-loader": "^3.0.0-beta.7",
+    "react-test-renderer": "^16.0.0",
+    "sass-loader": "^6.0.6",
+    "should": "^13.1.0",
+    "style-loader": "^0.18.2",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
+  },
+  "scripts": {
+    "build": "webpack",
+    "clean": "rm -rf ./.nyc_output ./.tmp ./coverage ./dist",
+    "serve": "NODE_ENV=dev webpack-dev-server",
+    "test": "NODE_ENV=test webpack && nyc --reporter=html --include 'src/**/*.js' mocha --require source-map-support/register dist/spec.js",
+    "test:watch": "NODE_ENV=test mocha-webpack --require source-map-support/register --watch --webpack-config webpack.config.js src/index.spec.js"
+  }
+}
