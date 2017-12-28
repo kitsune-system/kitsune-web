@@ -20,10 +20,27 @@ rules:
     - overrides:
         if:
           after: false
+        for:
+          after: false
+  new-cap:
+    - error
+    - capIsNew: false
   no-return-assign: off
+  no-unused-expressions:
+    - error
+    - allowTernary: true
   object-curly-spacing:
     - error
     - always
+  react/jsx-closing-bracket-location: off
+  react/jsx-first-prop-new-line: off
   react/jsx-handler-names:
     - error
     - eventHandlerPrefix: on
+  react/jsx-max-props-per-line: off
+  react/jsx-no-bind:
+    - error
+    - allowArrowFunctions: true
+  space-before-function-paren:
+    - error
+    - never

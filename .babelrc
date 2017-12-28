@@ -1,7 +1,6 @@
 {
-  "presets": [
-    "react"
-  ],
+  "presets": ["react"],
+  "plugins": ["transform-object-rest-spread"],
   "env": {
     "test": {
       "plugins": [ "istanbul" ]

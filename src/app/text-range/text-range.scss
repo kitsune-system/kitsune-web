@@ -1,0 +1,15 @@
+.text-range {
+  .text {
+    font-family: monospace, monospace;
+    font-size: 1em;
+    white-space: pre;
+  }
+
+  textarea {
+    overflow: hidden;
+  }
+
+  pre {
+    display: none;
+  }
+}

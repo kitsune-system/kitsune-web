@@ -1,56 +1,50 @@
+/* eslint-disable */
+
+import './app.scss';
+
 import React from 'react';
 
-import $ from 'jquery';
-import TextStretch from './text-stretch';
+import EntryBox from './entry-box/entry-box';
+import Overlay from './overlay/overlay';
 
-export default class App extends React.Component {
-  constructor() {
-    super();
-
-    this.state = { text: '' };
-
-    this.list = [];
-    this.state = {
-      text: '',
-      list: this.list
-    };
-
-    this.onChange = e => this.setState({ text: e.target.value });
-
-    this.onClick = () => {
-      this.setState({ text: 'You hit the button!\nAnother one' });
-    };
-
-    this.onKeyDown = e => {
-      if(e.key === 'Enter' && this.state.text.trim().length !== 0) {
-        e.preventDefault();
-
-        this.list.push(this.state.text);
-        this.setState({ text: '', list: this.list });
-      }
-
-      console.log('G', e.keyCode, e.key, e.location);
-    };
-  }
-
-  componentDidMount() {
-    $('#root .text-stretch textarea').focus();
-  }
-
+class App extends React.Component {
   render() {
-    const listItems = this.state.list.map(item => <li key={item}>{item}</li>);
+    const { props } = this;
 
     return (
-      <div>
-        <h1>Hello Kitsune</h1>
-        <button onClick={this.onClick}>Set</button>
-        <div className={this.state.text.length ? '' : 'hidden'}>
-          <TextStretch value={this.state.text} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
+      <div className="app">
+        <h1 className="title">Hello Kitsune</h1>
+
+        <button className="btn btn-primary" onClick={this.props.onSetClick}>Set</button>
+
+        <div className="entry-list">
+          {props.nodeList.map(item => {
+            const { key, node } = item;
+            return (
+              <div key={key}>
+                <pre>{node.string}</pre>
+                <div style={{ color: 'red' }}>{node.id}</div>
+              </div>
+            );
+          })}
         </div>
-        <ul>
-          {listItems}
-        </ul>
+
+        {props.mode !== null &&
+          <Overlay>
+            <EntryBox ref={el => this.entryBox = el}
+              mode={props.mode} onModeChange={props.onModeChange}
+              value={props.entry} onChange={props.onEntryChange}
+              onConfirm={props.onConfirmEntry}/>
+          </Overlay>
+        }
       </div>
     );
   }
+
+  componentDidUpdate() {
+    if(this.props.mode !== null)
+      this.entryBox.focus();
+  }
 }
+
+export default App;

@@ -1,0 +1,17 @@
+.app {
+  margin: 5px;
+
+  & > .title { margin-top: 0; }
+
+  .entry-list {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 10px;
+
+    pre {
+      display: inline-block;
+      margin-bottom: -4px;
+    }
+  }
+}
