@@ -13,14 +13,14 @@ export const STRING_MODE = 'string';
 export const TEXT_MODE = 'text';
 
 export default function entryFactory({ actions, kitsuneService, store }) {
-  const { addNode, setEntry, setMode, writeString } = actions;
+  const { addNode, clearNodeList, setEntry, setMode, writeString } = actions;
 
   const commands = {
+    clear: clearNodeList,
     new: () => {
-      kitsuneService.random().then(result => {
-        console.log('R', result);
-        addNode({ id: result });
-      });
+      kitsuneService.random().then(result =>
+        addNode({ id: result })
+      );
     }
   };
 

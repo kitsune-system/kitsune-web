@@ -4,9 +4,8 @@ import { buildReducer } from '../redux-utils';
 let listCounter = 0;
 
 const appHandlers = {
-  ADD_NODE: (state, action) => {
-    return [...state, { key: ++listCounter, node: action.node }];
-  }
+  ADD_NODE: (state, action) => ([...state, { key: ++listCounter, node: action.node }]),
+  CLEAR_NODE_LIST: () => []
 };
 
 const reducer = buildReducer(appHandlers, []);
