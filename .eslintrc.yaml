@@ -25,7 +25,9 @@ rules:
   new-cap:
     - error
     - capIsNew: false
-  no-return-assign: off
+  no-return-assign:
+    - error
+    - except-parens
   no-unused-expressions:
     - error
     - allowTernary: true
