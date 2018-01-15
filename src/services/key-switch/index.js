@@ -1,13 +1,34 @@
 import _ from 'lodash';
 
+const A = 65;
+const letterModules = {};
+
+for(let i = A; i < A + 26; i++) {
+  const letter = String.fromCharCode(i).toLowerCase();
+  letterModules[letter] = keyCode(i);
+}
+
 export const defaultModules = {
+  ...letterModules,
+
   tab: keyCode(9),
   enter: keyCode(13),
   escape: keyCode(27),
   space: keyCode(32),
 
-  '-shift': e => !e.shiftKey,
+  left: keyCode(37),
+  up: keyCode(38),
+  right: keyCode(39),
+  down: keyCode(40),
+
   '+shift': e => e.shiftKey,
+  '-shift': e => !e.shiftKey,
+  '+ctrl': e => e.ctrlKey,
+  '-ctrl': e => !e.ctrlKey,
+  '+alt': e => e.altKey,
+  '-alt': e => !e.altKey,
+  '+meta': e => e.metaKey,
+  '-meta': e => !e.metaKey,
 
   '!prevent': e => {
     e.preventDefault();

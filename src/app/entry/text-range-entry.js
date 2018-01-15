@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TextRange from '../text-range';
+import TextRange from '../../components/text-range/index';
 
 export default function TextRangeEntry({ label, onKeyDown, onConfirm }) {
   const result = class extends React.Component {

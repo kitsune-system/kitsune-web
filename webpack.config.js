@@ -41,10 +41,7 @@ const rules = {
   }
 };
 
-const useRules = function() {
-  const ruleNames = arguments;
-  return _.values(_.pick(rules, ruleNames));
-};
+const useRules = (...ruleNames) => _.values(_.pick(rules, ruleNames));
 
 const configs = {
   dev: {
@@ -53,11 +50,13 @@ const configs = {
     },
     output: {
       path: outputPath,
+      publicPath: '/',
       filename: 'app-[hash].js'
     },
 
     devtool: 'source-map',
     devServer: {
+      historyApiFallback: true,
       hot: true,
       port: 3000,
       overlay: true
@@ -65,6 +64,7 @@ const configs = {
 
     plugins: [
       new HtmlWebpackPlugin({ template: './src/index.html' }),
+      new webpack.NamedModulesPlugin(),
       new webpack.HotModuleReplacementPlugin()
     ],
     module: {
@@ -75,6 +75,7 @@ const configs = {
     entry: './src/index.spec.js',
     output: {
       path: outputPath,
+      publicPath: '/',
       filename: 'spec.js'
     },
 
@@ -88,6 +89,7 @@ const configs = {
     entry: './src/index.js',
     output: {
       path: outputPath,
+      publicPath: '/',
       filename: 'app-[hash].js'
     },
 

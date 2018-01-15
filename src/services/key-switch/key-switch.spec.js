@@ -1,7 +1,7 @@
 import should from 'should';
 import sinon from 'sinon';
 
-import KeySwitch, { keyCode } from '.';
+import KeySwitch, { keyCode } from './index';
 
 describe('KeySwitch', () => {
   beforeEach(() => {

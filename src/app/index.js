@@ -1,13 +1,18 @@
-import { connect } from 'react-redux';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 
-import { COMMAND_MODE } from './entry';
+import Console from '../components/console';
+import store from './store';
 
-export default function appFactory({ actions, Console }) {
-  const { setMode } = actions;
-
-  const dispatchToProps = {
-    onSetClick: () => setMode(COMMAND_MODE, 'run this command')
-  };
-
-  return connect(state => state, dispatchToProps)(Console);
-}
+const App = (
+  <Provider store={store}>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/:refMode/:view/:node" component={Console}/>
+        <Redirect to="/id/1234/abcd"/>
+      </Switch>
+    </BrowserRouter>
+  </Provider>
+);
+export default App;
