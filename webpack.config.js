@@ -1,9 +1,9 @@
 'use strict';
 
 const _ = require('lodash');
+const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
 
 const outputPath = process.cwd() + '/dist';
 

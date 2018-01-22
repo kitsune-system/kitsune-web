@@ -1,5 +1,3 @@
-import './node-list.scss';
-
 import { connect } from 'react-redux';
 
 import NodeListView from '../../components/node-list-view';

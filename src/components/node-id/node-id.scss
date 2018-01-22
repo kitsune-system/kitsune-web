@@ -1,0 +1,14 @@
+.node-id {
+  position: relative;
+
+  .full {
+    display: none;
+
+    background-color: black;
+    position: absolute;
+    top: -2px;
+    left: 0px;
+  }
+
+  &:hover .full { display: inline; }
+}
