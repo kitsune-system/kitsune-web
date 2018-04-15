@@ -1,8 +1,8 @@
 import { bindActionCreators } from 'redux';
 
 import * as actionCreators from './action-creators';
-import kitsuneService from '../app/kitsune-service';
-import store from '../app/store';
+import kitsuneService from '../kitsune-service';
+import store from './index';
 
 const basicActions = bindActionCreators(actionCreators, store.dispatch);
 const { addNode } = basicActions;
@@ -13,7 +13,12 @@ const newNode = () => {
   );
 };
 
-const writeString = string => {
+const writeString = (string, hash) => {
+  if(hash) {
+    addNode({ id: hash, string });
+    return Promise.resolve();
+  }
+
   return kitsuneService.writeString(string).then(hash => {
     console.log(`Hash for "${string}": ${hash}`);
     addNode({ id: hash, string });

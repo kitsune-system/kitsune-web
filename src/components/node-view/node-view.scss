@@ -1,10 +1,10 @@
-.selected .node-view {
-  border-color: yellow;
-}
-
 .node-view {
-  border: 2px solid DimGrey;
+  border: 2px solid dimgrey;
   border-radius: 8px;
   margin-bottom: 5px;
   padding: 4px;
+}
+
+.selected .node-view {
+  border-color: yellow;
 }

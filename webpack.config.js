@@ -22,7 +22,7 @@ const rules = {
   babelDev: {
     test: /\.js$/,
     exclude: /node_modules/,
-    loaders: ['react-hot-loader/webpack', 'babel-loader']
+    loader: 'babel-loader'
   },
   scss: {
     test: /\.scss$/,
@@ -45,9 +45,7 @@ const useRules = (...ruleNames) => _.values(_.pick(rules, ruleNames));
 
 const configs = {
   dev: {
-    entry: {
-      app: ['react-hot-loader/patch', './src/index.js']
-    },
+    entry: './src/index.js',
     output: {
       path: outputPath,
       publicPath: '/',
@@ -55,6 +53,7 @@ const configs = {
     },
 
     devtool: 'source-map',
+
     devServer: {
       historyApiFallback: true,
       hot: true,
@@ -71,6 +70,7 @@ const configs = {
       rules: useRules('babelDev', 'eslint', 'scss')
     }
   },
+
   test: {
     entry: './src/index.spec.js',
     output: {
@@ -85,6 +85,7 @@ const configs = {
       rules: useRules('babel', 'eslint', 'scssTest')
     }
   },
+
   production: {
     entry: './src/index.js',
     output: {

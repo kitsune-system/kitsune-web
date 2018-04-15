@@ -1,14 +1,15 @@
+import './index.scss';
+
+import React from 'react';
 import { render } from 'react-dom';
 import toastr from 'toastr';
 
+import App from './app';
+import keySplit from './app/input/key-split';
+import actions from './app/store/actions';
 import config from './config';
-import actions from './app/actions';
-import keySwitch from './app/key-switch';
 
-import './index.scss';
-
-console.log('Hello Kitsune');
-console.log('Config', config);
+const { setActiveView, writeString } = actions;
 
 // Toastr config
 toastr.options = {
@@ -16,29 +17,20 @@ toastr.options = {
   progressBar: true
 };
 
-const { writeString } = actions;
-writeString('Welcome to Kitsune')
-  .then(() => writeString('Start typing to begin command mode'));
+// Initial logging
+console.log('Hello Kitsune');
+console.log('Config', config);
 
-if(window) {
-  const { handle: handler } = keySwitch;
+// Write defaults strings to list
+writeString('Welcome to Kitsune').then(() =>
+  writeString('Start typing to begin command mode')
+);
 
-  if(window.handler)
-    window.removeEventListener('keydown', handler);
+// Register KeyHandler
+window.addEventListener('keydown', keySplit);
 
-  window.addEventListener('keydown', handler);
-  window.handler = handler;
-}
+// Load initial view based on location or default
+setActiveView('vsplit');
 
-function buildApp() {
-  const App = require('./app').default;
-  return App;
-}
-
-render(buildApp(), document.getElementById('root'));
-
-if(module.hot) {
-  module.hot.accept('./app', () => {
-    render(buildApp(), document.getElementById('root'));
-  });
-}
+// Render App
+render(<App/>, document.getElementById('root'));

@@ -13,6 +13,7 @@ const buildAxios = baseURL => {
     req.data = JSON.stringify(req.data);
     return req;
   });
+
   result.interceptors.response.use(res => res.data);
 
   return result;

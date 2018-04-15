@@ -15,15 +15,12 @@ export function selectNextNode() {
   return { type: 'OFFSET_SELECTED_NODE', offset: -1 };
 }
 
-// Entry
-export function setEntry(value) {
-  return { type: 'SET_ENTRY', value };
+// ViewTree
+export function setActiveView(activeView) {
+  return { type: 'SET_ACTIVE_VIEW', activeView };
 }
-export function setMode(mode, text) {
-  const action = { type: 'SET_MODE', mode };
 
-  if(text)
-    action.text = text;
-
-  return action;
+// VSplit
+export function switchFocus() {
+  return { type: 'SWITCH_FOCUS' };
 }

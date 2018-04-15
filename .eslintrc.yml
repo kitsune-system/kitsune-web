@@ -34,6 +34,11 @@ rules:
   object-curly-spacing:
     - error
     - always
+  space-before-function-paren:
+    - error
+    - never
+
+  # react
   react/jsx-closing-bracket-location: off
   react/jsx-first-prop-new-line: off
   react/jsx-handler-names:
@@ -43,6 +48,6 @@ rules:
   react/jsx-no-bind:
     - error
     - allowArrowFunctions: true
-  space-before-function-paren:
+  react/prop-types:
     - error
-    - never
+    - skipUndeclared: true

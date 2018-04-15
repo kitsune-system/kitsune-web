@@ -1,6 +1,9 @@
 {
   "presets": ["react"],
-  "plugins": ["transform-object-rest-spread"],
+  "plugins": [
+    "react-hot-loader/babel",
+    "transform-object-rest-spread"
+  ],
   "env": {
     "test": {
       "plugins": [ "istanbul" ]

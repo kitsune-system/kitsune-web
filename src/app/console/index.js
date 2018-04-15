@@ -1,19 +1,20 @@
 import './console.scss';
 
-import React from 'react';
+import React, { Component } from 'react';
 
-import Entry from '../../app/entry';
-import NodeList from '../../app/node-list';
-import ViewSwitch from '../../app/view-switch';
+import RequestList from '../requests';
+import ViewTree from '../view-tree';
 
-const Console = () => (
-  <div className="console">
-    <h1 className="title">Kitsune</h1>
-
-    <ViewSwitch/>
-    <NodeList/>
-    <Entry/>
-  </div>
-);
+class Console extends Component {
+  render() {
+    return (
+      <div className="console">
+        <h1 className="title">Kitsune</h1>
+        <ViewTree/>
+        <RequestList/>
+      </div>
+    );
+  }
+}
 
 export default Console;

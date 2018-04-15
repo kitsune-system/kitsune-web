@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { buildReducer } from '../redux-utils';
+import { Reducer } from '../store/redux-utils';
 
 // TODOS: Anti-pattern, fix this
 let listCounter = 0;
@@ -31,6 +31,6 @@ const appHandlers = {
   }
 };
 
-const reducer = buildReducer(appHandlers, { nodes: [], selectedNode: 0 });
+const reducer = Reducer(appHandlers, { nodes: [], selectedNode: 0 });
 
 export default reducer;

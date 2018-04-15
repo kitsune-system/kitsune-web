@@ -1,5 +1,14 @@
 .console {
+  display: flex;
+  flex-direction: column;
 
-  margin: 5px;
-  & > .title { margin-top: 0; }
+  width: 100%;
+  height: 100%;
+
+  & > .title {
+    color: orange;
+    border-bottom: 2px solid orange;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 }

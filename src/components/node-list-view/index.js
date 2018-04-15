@@ -1,3 +1,5 @@
+import './node-list-view.scss';
+
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -5,10 +7,12 @@ import NodeView from '../node-view/index';
 
 class NodeListView extends React.Component {
   render() {
+    const { nodes, selectedNode } = this.props;
+
     return (
       <div className="node-list-view">
-        {this.props.nodes.map((item, index) => (
-          <span key={item.key} className={index === this.props.selectedNode ? 'selected' : null}>
+        {nodes.map((item, index) => (
+          <span key={item.key} className={index === selectedNode ? 'selected' : null}>
             <NodeView node={item.node}/>
           </span>
         ))}
