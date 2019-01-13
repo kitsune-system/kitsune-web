@@ -3,7 +3,7 @@ import hash, { hashList, toHex, fromHex, sha256 } from './hash';
 describe('hash', () => {
   it('should work', () => {
     const result = hash(['my data', 'another one']);
-    result.should.equal('');
+    result.should.equal('b2167b0aa7ef7794740b055ac7a880a52934aa67ef1ca6887ad81dccefd5b9de');
   });
 
   describe('hashList', () => {

@@ -18,9 +18,15 @@ rules:
   keyword-spacing:
     - error
     - overrides:
-        if:
+        catch:
           after: false
         for:
+          after: false
+        if:
+          after: false
+        switch:
+          after: false
+        while:
           after: false
   new-cap:
     - error
@@ -34,6 +40,10 @@ rules:
   object-curly-spacing:
     - error
     - always
+  one-var: off
+  quotes:
+    - error
+    - single
   space-before-function-paren:
     - error
     - never

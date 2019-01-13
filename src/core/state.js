@@ -29,7 +29,7 @@ const State = (val, { output, mixins } = {}) => {
     const mixinObj = mixins(state, push);
     _.each(mixinObj, (mixin, name) => {
       if(name === 'output' || name === 'value')
-        throw new Error(`Can't include a mixin called "output" or "value"`);
+        throw new Error('Can\'t include a mixin called "output" or "value"');
 
       state[name] = mixin;
     });

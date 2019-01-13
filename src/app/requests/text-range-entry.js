@@ -39,11 +39,11 @@ class TextRangeEntry extends React.Component {
 
         <TextRange
           ref={el => (this.textRange = el)}
-          {...otherProps}
+          autoFocus
+          value={this.state.value}
           onChange={e => this.setState({ value: e.target.value })}
           onKeyDown={onKeyDown}
-          value={this.state.value}
-          autoFocus
+          {...otherProps}
         />
 
         <button className="btn btn-primary" onClick={e => onConfirm(this.state.value, e)}>

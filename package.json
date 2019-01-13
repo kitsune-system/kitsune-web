@@ -1,5 +1,16 @@
 {
-  "license": "GPL-3.0",
+  "name": "kitsune-web",
+  "version": "1.0.0",
+  "author": "Edward Nicholes Jr.",
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "build": "webpack",
+    "clean": "rm -rf ./.nyc_output ./.tmp ./coverage ./dist",
+    "serve": "NODE_ENV=dev webpack-dev-server",
+    "test": "NODE_ENV=test webpack && nyc --reporter=html --include 'src/**/*.js' mocha --require source-map-support/register dist/spec.js",
+    "test:debug": "NODE_ENV=test webpack && nyc --reporter=html --include 'src/**/*.js' mocha --inspect-brk --require source-map-support/register dist/spec.js",
+    "test:watch": "NODE_ENV=test mocha-webpack --require source-map-support/register --watch --webpack-config webpack.config.js src/index.spec.js"
+  },
   "dependencies": {
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
@@ -41,13 +52,5 @@
     "toastr": "^2.1.4",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1"
-  },
-  "scripts": {
-    "build": "webpack",
-    "clean": "rm -rf ./.nyc_output ./.tmp ./coverage ./dist",
-    "serve": "NODE_ENV=dev webpack-dev-server",
-    "test": "NODE_ENV=test webpack && nyc --reporter=html --include 'src/**/*.js' mocha --require source-map-support/register dist/spec.js",
-    "test:debug": "NODE_ENV=test webpack && nyc --reporter=html --include 'src/**/*.js' mocha --inspect-brk --require source-map-support/register dist/spec.js",
-    "test:watch": "NODE_ENV=test mocha-webpack --require source-map-support/register --watch --webpack-config webpack.config.js src/index.spec.js"
   }
 }
