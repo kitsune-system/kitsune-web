@@ -5,105 +5,64 @@ const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const outputPath = process.cwd() + '/dist';
+const env = process.env.NODE_ENV || 'production';
+console.log(`Webpack ENV: ${env}`);
 
-const rules = {
-  eslint: {
-    test: /\.js$/,
-    exclude: /node_modules/,
-    loader: 'eslint-loader',
-    enforce: 'pre'
-  },
-  babel: {
-    test: /\.js$/,
-    exclude: /node_modules/,
-    loader: 'babel-loader'
-  },
-  babelDev: {
-    test: /\.js$/,
-    exclude: /node_modules/,
-    loader: 'babel-loader'
-  },
-  scss: {
-    test: /\.scss$/,
-    loaders: [
-      'style-loader',
-      'css-loader',
-      'sass-loader'
+const config = {
+  mode: 'production',
+
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: 'eslint-loader',
+        enforce: 'pre'
+      }, {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: 'babel-loader'
+      }, {
+        test: /\.scss$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'sass-loader' }
+        ]
+      }
     ]
   },
-  scssTest: {
-    test: /\.scss$/,
-    loaders: [
-      'css-loader',
-      'sass-loader'
-    ]
-  }
-};
 
-const useRules = (...ruleNames) => _.values(_.pick(rules, ruleNames));
+  plugins: [
+    new HtmlWebpackPlugin({ template: './src/index.html' })
+  ]
+}
 
-const configs = {
-  dev: {
-    entry: './src/index.js',
-    output: {
-      path: outputPath,
-      publicPath: '/',
-      filename: 'app-[hash].js'
-    },
-
+if(env === 'development') {
+  Object.assign(config, {
+    mode: 'development',
     devtool: 'source-map',
-
     devServer: {
       historyApiFallback: true,
       hot: true,
       port: 3000,
       overlay: true
-    },
-
-    plugins: [
-      new HtmlWebpackPlugin({ template: './src/index.html' }),
-      new webpack.NamedModulesPlugin(),
-      new webpack.HotModuleReplacementPlugin()
-    ],
-    module: {
-      rules: useRules('babelDev', 'eslint', 'scss')
     }
-  },
+  });
+}
 
-  test: {
-    entry: './src/index.spec.js',
+if(env === 'test') {
+  Object.assign(config, {
+    mode: 'development',
+    target: 'node',
+
+    entry: './src/index.spec',
     output: {
-      path: outputPath,
-      publicPath: '/',
       filename: 'spec.js'
     },
 
-    devtool: 'source-map',
+    devtool: 'source-map'
+  });
+}
 
-    module: {
-      rules: useRules('babel', 'eslint', 'scssTest')
-    }
-  },
-
-  production: {
-    entry: './src/index.js',
-    output: {
-      path: outputPath,
-      publicPath: '/',
-      filename: 'app-[hash].js'
-    },
-
-    plugins: [
-      new HtmlWebpackPlugin({ template: './src/index.html' })
-    ],
-    module: {
-      rules: useRules('babel', 'eslint', 'scss')
-    }
-  }
-};
-
-const nodeEnv = process.env.NODE_ENV || 'production';
-
-let config = configs[nodeEnv];
 module.exports = config;

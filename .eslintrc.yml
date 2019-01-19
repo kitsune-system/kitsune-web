@@ -10,6 +10,10 @@ extends:
 
 parser: babel-eslint
 
+settings:
+  react:
+    version: detect
+
 rules:
   curly:
     - error

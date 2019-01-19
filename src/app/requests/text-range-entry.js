@@ -46,7 +46,7 @@ class TextRangeEntry extends React.Component {
           {...otherProps}
         />
 
-        <button className="btn btn-primary" onClick={e => onConfirm(this.state.value, e)}>
+        <button type="button" className="btn btn-primary" onClick={e => onConfirm(this.state.value, e)}>
           <i className="fa fa-check" aria-hidden="true"/>
         </button>
       </div>

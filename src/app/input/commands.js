@@ -21,7 +21,7 @@ const command = cmdStr => {
   const command = findCommand(commandName);
 
   if(command)
-    command.apply(null, args);
+    command(...args);
   else
     toastr.error(`No such command: ${commandName}`);
 };

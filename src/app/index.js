@@ -1,5 +1,5 @@
 import React from 'react';
-import { hot } from 'react-hot-loader';
+import { hot } from 'react-hot-loader/root';
 import { Provider } from 'react-redux';
 
 import Console from './console';
@@ -11,4 +11,4 @@ const App = () => (
   </Provider>
 );
 
-export default hot(module)(App);
+export default hot(App);
