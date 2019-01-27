@@ -1,4 +1,6 @@
-import { combineReducers, createStore } from 'redux';
+import { combineReducers } from 'redux';
+
+import createStore from 'env/create-store';
 
 import nodeListReducer from '../node-list/reducer';
 import viewTreeReducer from '../view-tree/reducer';

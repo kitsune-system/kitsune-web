@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const path = require('path');
 const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -35,7 +36,13 @@ const config = {
 
   plugins: [
     new HtmlWebpackPlugin({ template: './src/index.html' })
-  ]
+  ],
+
+  resolve: {
+    alias: {
+      env: path.resolve(__dirname, `src/env/${env}/`)
+    }
+  }
 }
 
 if(env === 'development') {
