@@ -12,6 +12,10 @@ console.log(`Webpack ENV: ${env}`);
 const config = {
   mode: 'production',
 
+  output: {
+    filename: '[name]-[contenthash].js'
+  },
+
   module: {
     rules: [
       {

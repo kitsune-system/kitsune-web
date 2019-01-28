@@ -1,0 +1,5 @@
+#!/bin/sh
+mv index.html index.html.orig
+cat index.html.orig | envsubst > index.html
+
+nginx -g 'daemon off;'

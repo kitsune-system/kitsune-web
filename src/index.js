@@ -7,9 +7,9 @@ import toastr from 'toastr';
 import App from './app';
 import keySplit from './app/input/key-split';
 import actions from './app/store/actions';
-import config from './config';
+import config from 'env/config';
 
-const { setActiveView, writeString } = actions;
+const { setActiveView } = actions;
 
 // Toastr config
 toastr.options = {
@@ -20,11 +20,6 @@ toastr.options = {
 // Initial logging
 console.log('Hello Kitsune');
 console.log('Config', config);
-
-// Write defaults strings to list
-writeString('Welcome to Kitsune').then(() =>
-  writeString('Start typing to begin command mode')
-);
 
 // Register KeyHandler
 window.addEventListener('keydown', keySplit);

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import KitsuneService from '../services/kitsune-service';
 
-import { kitsuneServiceUrl } from '../config';
+import { kitsuneUrl } from 'env/config';
 
 const buildAxios = baseURL => {
   const result = axios.create({
@@ -19,7 +19,7 @@ const buildAxios = baseURL => {
   return result;
 };
 
-const request = buildAxios(kitsuneServiceUrl);
+const request = buildAxios(kitsuneUrl);
 
 const kitsuneService = KitsuneService(request);
 export default kitsuneService;
