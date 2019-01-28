@@ -1,0 +1,34 @@
+image: node:11-alpine
+
+stages:
+  - build
+  - publish
+  - deploy
+
+test:
+  stage: build
+  script:
+    - npm install
+    - npm run test
+
+build:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist
+
+docker:
+  stage: publish
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+     DOCKER_HOST: tcp://docker:2375
+     DOCKER_DRIVER: overlay2
+  script:
+    - docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
+    - docker build -t "kitsunesystem/kitsune-web:$CI_COMMIT_SHA" .
+    - docker push "kitsunesystem/kitsune-web:$CI_COMMIT_SHA"
