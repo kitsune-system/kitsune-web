@@ -45,5 +45,5 @@ kubernetes:
     - apk add gettext
     - mkdir -p ~/.kube/kitsune
     - echo "$K8S_CONFIG" | base64 -d > ~/.kube/config
-    - echo "$K8S_CERT" | base -d > ~/.kube/kitsune/ca.crt
+    - echo "$K8S_CERT" | base64 -d > ~/.kube/kitsune/ca.crt
     - cat kube.yml | envsubst | kubectl apply -f -
