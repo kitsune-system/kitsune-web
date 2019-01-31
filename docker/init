@@ -2,4 +2,10 @@
 mv index.html index.html.orig
 cat index.html.orig | envsubst > index.html
 
+# web flag
+if [ -n "$WEB_FLAG_PATH" ]; then
+  mkdir -p $(dirname "$WEB_FLAG_PATH")
+  echo "$WEB_FLAG_VALUE" > "$WEB_FLAG_PATH"
+fi
+
 nginx -g 'daemon off;'
