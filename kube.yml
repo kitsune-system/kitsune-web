@@ -15,7 +15,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: KITSUNE_URL
-          value: 'http://api.kitsune-system.org'
+          value: 'https://api.kitsune-system.org'
         - name: KITSUNE_WEB_SERVER_NAME
           value: 'kitsune-system.org'
         - name: KITSUNE_WEB_CERT
