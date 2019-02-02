@@ -9,6 +9,13 @@ import keySplit from './app/input/key-split';
 import actions from './app/store/actions';
 import config from 'env/config';
 
+import kitsuneService from './app/kitsune-service';
+
+// Service test
+kitsuneService.random().then(random => {
+  console.log('Random:', random);
+});
+
 const { setActiveView } = actions;
 
 // Toastr config

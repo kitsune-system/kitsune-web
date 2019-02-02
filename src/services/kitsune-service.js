@@ -5,7 +5,7 @@ export const WRITE_STRING = 'fc9b664949f9da76c96475cd50578b8755070a060923bafe2e4
 // Compound node ids
 export const SEARCH_STRING = 'a0225ff71229f55c76d7f7b65c32da14f37327c7cd6d773e8af47e162d179894';
 
-// WEBAPP IDS
+const READ_RANDOM = '4UJIsTsFmXymXV8MmTDZhbquxzsVV6xnoA1xPd3Oz04=';
 
 const path = parts => {
   return parts.join('/');
@@ -13,11 +13,11 @@ const path = parts => {
 
 const KitsuneService = request => {
   const post = (parts, data) => {
-    return request.post(path([TO_JSON, ...parts]), data)
-      .then(response => JSON.parse(response));
+    return request.post(path(parts), data)
+      .then(response => response);
   };
 
-  const random = () => post([RANDOM]);
+  const random = () => post([READ_RANDOM]);
   const searchStrings = pattern => post([SEARCH_STRING], pattern);
   const writeString = str => post([WRITE_STRING], str);
 

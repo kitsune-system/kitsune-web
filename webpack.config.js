@@ -13,7 +13,7 @@ const config = {
   mode: 'production',
 
   output: {
-    filename: '[name]-[contenthash].js'
+    filename: '[name]-[hash].js'
   },
 
   module: {
