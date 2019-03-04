@@ -1,3 +1,4 @@
+/* eslint-disable */
 import './index.scss';
 
 import React from 'react';
@@ -12,9 +13,9 @@ import config from 'env/config';
 import kitsuneService from './app/kitsune-service';
 
 // Service test
-kitsuneService.random().then(random => {
-  console.log('Random:', random);
-});
+// kitsuneService.random().then(random => {
+//   console.log('Random:', random);
+// });
 
 const { setActiveView } = actions;
 

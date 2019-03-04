@@ -39,7 +39,10 @@ const config = {
   },
 
   plugins: [
-    new HtmlWebpackPlugin({ template: './src/index.html' })
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      base: 'https://kitsune.org/'
+    })
   ],
 
   resolve: {
@@ -58,7 +61,14 @@ if(env === 'development') {
       hot: true,
       port: 3000,
       overlay: true
-    }
+    },
+
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: './src/index.html',
+        base: 'http://localhost:3000/'
+      })
+    ],
   });
 }
 
