@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Component } from 'react';
+import React, { Component } from 'react';
 
 import KitsuneService from './kitsune-service';
 
@@ -24,15 +24,31 @@ const service = KitsuneService(request);
 
 // TODO: Use hooks
 class Console extends Component {
+  state = { value: '' };
+
   componentDidMount() {
+    this.onRandomClick();
+  }
+
+  onRandomClick = () => {
     service('ijJv0As7V8Vk8kx1kL5Rm+LSDyHnfFPazUVtB/pmZiw=').then(result => {
       const random = Buffer.from(result).toString('base64');
       console.log('R', random);
+      this.setState({ value: random });
     });
-  }
+  };
 
   render() {
-    return 'Hello World';
+    const { value } = this.state;
+
+    return (
+      <div className="input-group mb-3">
+        <div className="input-group-prepend">
+          <button type="button" className="btn btn-outline-secondary" onClick={this.onRandomClick}>Random</button>
+        </div>
+        <input readOnly type="text" className="form-control" value={value}/>
+      </div>
+    );
   }
 }
 
