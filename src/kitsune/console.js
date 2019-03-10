@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import { Button, Input } from 'semantic-ui-react';
 
 import KitsuneService from './kitsune-service';
 
@@ -40,14 +41,10 @@ class Console extends Component {
 
   render() {
     const { value } = this.state;
+    const button = (<Button onClick={this.onRandomClick}>Random</Button>);
 
     return (
-      <div className="input-group mb-3">
-        <div className="input-group-prepend">
-          <button type="button" className="btn btn-outline-secondary" onClick={this.onRandomClick}>Random</button>
-        </div>
-        <input readOnly type="text" className="form-control" value={value}/>
-      </div>
+      <Input fluid type="text" actionPosition="left" action={button} value={value}/>
     );
   }
 }
