@@ -1,6 +1,8 @@
+/* eslint-disable */
 import axios from 'axios';
-import React, { Component } from 'react';
-import { Button, Input } from 'semantic-ui-react';
+import React, { useEffect, useState } from 'react';
+import { Button, Grid, Input } from 'semantic-ui-react';
+import styled from 'styled-components';
 
 import KitsuneService from './kitsune-service';
 
@@ -24,29 +26,30 @@ const request = buildAxios('http://localhost:8080');
 const service = KitsuneService(request);
 
 // TODO: Use hooks
-class Console extends Component {
-  state = { value: '' };
+function Console() {
+  const [random, setRandom] = useState('');
 
-  componentDidMount() {
-    this.onRandomClick();
-  }
-
-  onRandomClick = () => {
+  const onRandomClick = () => {
     service('ijJv0As7V8Vk8kx1kL5Rm+LSDyHnfFPazUVtB/pmZiw=').then(result => {
       const random = Buffer.from(result).toString('base64');
-      console.log('R', random);
-      this.setState({ value: random });
+      setRandom(random);
     });
   };
 
-  render() {
-    const { value } = this.state;
-    const button = (<Button onClick={this.onRandomClick}>Random</Button>);
+  useEffect(onRandomClick, []);
 
-    return (
-      <Input fluid type="text" actionPosition="left" action={button} value={value}/>
-    );
-  }
+  const button = (<Button onClick={onRandomClick}>Random</Button>);
+
+  return (
+    <div>
+      <Input fluid type="text" actionPosition="left" action={button} value={random}/>
+      <div>
+        <Input type="text" placeholder="Head"/>
+        <Input type="text" placeholder="Tail"/>
+        <Button>Create</Button>
+      </div>
+    </div>
+  );
 }
 
 export default Console;
