@@ -1,8 +1,7 @@
 /* eslint-disable */
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Button, Grid, Input } from 'semantic-ui-react';
-import styled from 'styled-components';
+import { Button, Input } from 'semantic-ui-react';
 
 import KitsuneService from './kitsune-service';
 
@@ -25,7 +24,6 @@ const request = buildAxios('http://localhost:8080');
 
 const service = KitsuneService(request);
 
-// TODO: Use hooks
 function Console() {
   const [random, setRandom] = useState('');
   const [commandList, setCommandList] = useState([]);
@@ -45,6 +43,10 @@ function Console() {
 
   const button = (<Button onClick={onRandomClick}>Random</Button>);
 
+  const commands = Object.entries(commandList).map(([hash, name]) => {
+    return <li key={hash}><Input readOnly type="text" value={hash}/> - {JSON.stringify(name)}</li>;
+  });
+
   return (
     <div>
       <Input fluid type="text" actionPosition="left" action={button} value={random}/>
@@ -54,9 +56,7 @@ function Console() {
         <Button>Create</Button>
       </div>
       <div>List Commands</div>
-      <ul>
-        {Object.entries(commandList).map(([hash, name]) => <li><Input readonly type="text" value={hash}/> - {JSON.stringify(name)}</li>)}
-      </ul>
+      <ul>{commands}</ul>
     </div>
   );
 }

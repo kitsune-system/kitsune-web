@@ -1,9 +1,10 @@
 const KitsuneService = request => {
-  const post = (parts, data) => request.post(parts, data)
-    .then(response => response);
+  return (parts, data) => {
+    if(typeof data !== 'object')
+      data = JSON.stringify(data);
 
-  const service = (node, data) => post(node, data);
-  return service;
+    return request.post(parts, data).then(response => response);
+  };
 };
 
 export default KitsuneService;
