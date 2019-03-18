@@ -27,13 +27,9 @@ const service = KitsuneService(request);
 function Console() {
   const [random, setRandom] = useState('');
   const [commandList, setCommandList] = useState([]);
+  const [edgeList, setEdgeList] = useState([]);
 
-  const onRandomClick = () => {
-    service('ijJv0As7V8Vk8kx1kL5Rm+LSDyHnfFPazUVtB/pmZiw=').then(result => {
-      const random = Buffer.from(result).toString('base64');
-      setRandom(random);
-    });
-  };
+  const onRandomClick = () => service.random().then(setRandom);
 
   useEffect(onRandomClick, []);
 
@@ -55,8 +51,10 @@ function Console() {
         <Input type="text" placeholder="Tail"/>
         <Button>Create</Button>
       </div>
-      <div>List Commands</div>
+      <div>Commands:</div>
       <ul>{commands}</ul>
+      <div>Edges:</div>
+      <ul>{edgeList}</ul>
     </div>
   );
 }
