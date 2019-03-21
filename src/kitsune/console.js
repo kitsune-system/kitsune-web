@@ -53,29 +53,40 @@ const mapState = (...initialState) => {
 function Console() {
   const [random, setRandom] = useState('');
   const [commandList, setCommandList] = useState([]);
-  const [edgeList, setEdgeList] = useState([]);
+  const [edgeList, stringList] = mapState([], []);
   const [head, tail] = mapState('', '');
+  const [string] = mapState('');
 
   const onRandomClick = () => service.random().then(setRandom);
+
   const onWriteEdgeClick = () => {
     service('/writeEdge', [head(), tail()]).then(() => {
       head(''); tail('');
     });
   };
 
+  const onWriteStringClick = () => {
+    service('/writeString', string()).then(hash => string(hash));
+  };
+
   useEffect(() => {
     onRandomClick();
 
     service('commands').then(setCommandList);
-    service('listEdge').then(setEdgeList);
+    service('listEdge').then(edgeList);
+    service('listString').then(stringList);
   }, []);
 
   const commands = Object.entries(commandList).map(([hash, name]) => {
     return <li key={hash}><Node value={hash}/> - {JSON.stringify(name)}</li>;
   });
 
-  const edges = edgeList.map(([head, tail, id]) => (
+  const edges = edgeList().map(([head, tail, id]) => (
     <li key={id}><Button icon="close"/><Node value={head}/> {'->'} <Node value={tail}/> # <Node value={id}/></li>
+  ));
+
+  const strings = stringList().map(({ id, string }) => (
+    <li key={id}><Button icon="close"/><Node value={id}/><Node value={string}/></li>
   ));
 
   return (
@@ -92,11 +103,19 @@ function Console() {
         <Button onClick={onWriteEdgeClick}>Write Edge</Button>
       </div>
 
+      <div>
+        <CopyInput type="text" placeholder="String" {...bind(string)}/>
+        <Button onClick={onWriteStringClick}>Write String</Button>
+      </div>
+
       <h2>Commands:</h2>
       <ul>{commands}</ul>
 
       <h2>Edges:</h2>
       <ul>{edges}</ul>
+
+      <h2>Strings:</h2>
+      <ul>{strings}</ul>
     </div>
   );
 }
