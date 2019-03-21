@@ -38,19 +38,30 @@ const CopyInput = props => {
 
 const Node = props => <CopyInput readOnly type="text" {...props}/>;
 
-const bind = statePair => ({
-  onChange: e => statePair[1](e.currentTarget.value),
-  value: statePair[0],
+const bind = state => ({
+  onChange: e => state(e.currentTarget.value),
+  value: state(),
 });
+
+const mapState = (...initialState) => {
+  return initialState.map(initState => {
+    const [value, setter] = useState(initState);
+    return val => val === undefined ? value : setter(val);
+  });
+};
 
 function Console() {
   const [random, setRandom] = useState('');
   const [commandList, setCommandList] = useState([]);
   const [edgeList, setEdgeList] = useState([]);
-  const [head, tail] = ['', ''].map(useState);
+  const [head, tail] = mapState('', '');
 
   const onRandomClick = () => service.random().then(setRandom);
-  const onWriteEdgeClick = () => service('/writeEdge', [head[0], tail[0]]);
+  const onWriteEdgeClick = () => {
+    service('/writeEdge', [head(), tail()]).then(() => {
+      head(''); tail('');
+    });
+  };
 
   useEffect(() => {
     onRandomClick();
