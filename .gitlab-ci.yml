@@ -33,17 +33,17 @@ docker:
     - docker build -t "kitsunesystem/kitsune-web:$CI_COMMIT_SHA" .
     - docker push "kitsunesystem/kitsune-web:$CI_COMMIT_SHA"
 
-kubernetes:
-  stage: deploy
-  image:
-    name: lachlanevenson/k8s-kubectl
-    entrypoint: [""]
-  environment:
-    name: production
-    url: https://kitsune-system.org
-  script:
-    - apk add gettext
-    - mkdir -p ~/.kube/kitsune
-    - echo "$K8S_CONFIG" | base64 -d > ~/.kube/config
-    - echo "$K8S_CERT" | base64 -d > ~/.kube/kitsune/ca.crt
-    - cat kube.yml | envsubst | kubectl apply -f -
+# kubernetes:
+#   stage: deploy
+#   image:
+#     name: lachlanevenson/k8s-kubectl
+#     entrypoint: [""]
+#   environment:
+#     name: production
+#     url: https://kitsune-system.org
+#   script:
+#     - apk add gettext
+#     - mkdir -p ~/.kube/kitsune
+#     - echo "$K8S_CONFIG" | base64 -d > ~/.kube/config
+#     - echo "$K8S_CERT" | base64 -d > ~/.kube/kitsune/ca.crt
+#     - cat kube.yml | envsubst | kubectl apply -f -

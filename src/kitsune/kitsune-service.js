@@ -1,4 +1,6 @@
-const KitsuneService = request => {
+import axios from 'axios';
+
+export const KitsuneService = request => {
   const service = (parts, data) => {
     if(typeof data !== 'object')
       data = JSON.stringify(data);
@@ -16,4 +18,22 @@ const KitsuneService = request => {
   return service;
 };
 
-export default KitsuneService;
+const buildAxios = baseURL => {
+  const result = axios.create({
+    baseURL,
+    headers: { 'Content-Type': 'application/json' }
+  });
+  result.interceptors.request.use(req => {
+    req.data = JSON.stringify(req.data);
+    return req;
+  });
+
+  result.interceptors.response.use(res => res.data);
+
+  return result;
+};
+
+const request = buildAxios('http://localhost:8080');
+
+const service = KitsuneService(request);
+export default service;

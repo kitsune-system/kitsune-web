@@ -1,27 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input, List, Tab } from 'semantic-ui-react';
 
-import KitsuneService from './kitsune-service';
-
-const buildAxios = baseURL => {
-  const result = axios.create({
-    baseURL,
-    headers: { 'Content-Type': 'application/json' }
-  });
-  result.interceptors.request.use(req => {
-    req.data = JSON.stringify(req.data);
-    return req;
-  });
-
-  result.interceptors.response.use(res => res.data);
-
-  return result;
-};
-
-const request = buildAxios('http://localhost:8080');
-
-const service = KitsuneService(request);
+import service from './kitsune-service';
 
 const CopyInput = props => {
   const inputEl = useRef(null);
@@ -42,21 +22,19 @@ const bind = state => ({
   value: state(),
 });
 
-const mapState = (...initialState) => {
-  return initialState.map(initState => {
-    const [value, setter] = useState(initState);
-    return val => val === undefined ? value : setter(val);
-  });
+const linkState = initState => {
+  const [value, setter] = useState(initState);
+  return val => val === undefined ? value : setter(val);
 };
 
 const CommandList = () => {
-  const [commandList, setCommandList] = useState([]);
+  const commandList = linkState([]);
 
   useEffect(() => {
-    service('commands').then(setCommandList);
+    service('commands').then(commandList);
   }, []);
 
-  const commands = Object.entries(commandList).map(([hash, name]) => {
+  const commands = Object.entries(commandList()).map(([hash, name]) => {
     return <List.Item key={hash}><Node value={hash}/> {JSON.stringify(name)}</List.Item>;
   });
 
@@ -64,15 +42,14 @@ const CommandList = () => {
 };
 
 const EdgeList = () => {
-  const [edgeList] = mapState([]);
-  const [head, tail] = mapState('', '');
+  const [head, tail, edgeList] = ['', '', []].map(linkState);
 
   useEffect(() => {
     service('listEdge').then(edgeList);
   }, []);
 
   const onWriteEdgeClick = () => {
-    service('/writeEdge', [head(), tail()]).then(() => {
+    service('writeEdge', [head(), tail()]).then(() => {
       head('');
       tail('');
     });
@@ -101,14 +78,14 @@ const EdgeList = () => {
 };
 
 const StringList = () => {
-  const [string, stringList] = mapState('', []);
+  const [string, stringList] = ['', []].map(linkState);
 
   useEffect(() => {
     service('listString').then(stringList);
   }, []);
 
   const onWriteStringClick = () => {
-    service('/writeString', string()).then(hash => string(hash));
+    service('writeString', string()).then(hash => string(hash));
   };
 
   const strings = stringList().map(({ id, string }) => (
@@ -138,9 +115,18 @@ const flexGrow = (val = 1) => ({ style: { flexGrow: val } });
 const noGrow = flexGrow(0);
 
 const Console = () => {
-  const [random, setRandom] = useState('');
+  const random = linkState('');
 
-  const onRandomClick = () => service.random().then(setRandom);
+  const onRandomClick = () => service.random().then(random);
+  const onTestClick = () => {
+    service(
+      'code', // Code
+      'X9jwENfzyDvyCXKAdZfslKcH6L44mTrV7vOnaJ4RHXo=', // Edge
+    ).then(code => {
+      console.log('LEN:', code.length);
+      console.log('CODE:', code);
+    });
+  };
 
   useEffect(() => {
     onRandomClick();
@@ -149,14 +135,17 @@ const Console = () => {
   return (
     <List>
       <List.Item>
-        <Button onClick={() => service('/save')}>Save</Button>
-        <Button onClick={() => service('/load')}>Load</Button>
+        <Button onClick={() => service('save')}>Save</Button>
+        <Button onClick={() => service('load')}>Load</Button>
+        <Button onClick={onTestClick}>
+          Test
+        </Button>
       </List.Item>
 
       <List.Item>
         <Flex>
           <Button {...noGrow} onClick={onRandomClick}>Random</Button>
-          <Node value={random}/>
+          <Node value={random()}/>
         </Flex>
       </List.Item>
 
