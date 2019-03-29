@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input, List, Tab } from 'semantic-ui-react';
 
-import service from './kitsune-service';
+import buildClient from '../common/client';
+
+const client = buildClient('http://localhost:8080');
 
 const CopyInput = props => {
   const inputEl = useRef(null);
@@ -31,7 +33,7 @@ const CommandList = () => {
   const commandList = linkState([]);
 
   useEffect(() => {
-    service('commands').then(commandList);
+    client('commands').then(commandList);
   }, []);
 
   const commands = Object.entries(commandList()).map(([hash, name]) => {
@@ -45,11 +47,11 @@ const EdgeList = () => {
   const [head, tail, edgeList] = ['', '', []].map(linkState);
 
   useEffect(() => {
-    service('listEdge').then(edgeList);
+    client('listEdge').then(edgeList);
   }, []);
 
   const onWriteEdgeClick = () => {
-    service('writeEdge', [head(), tail()]).then(() => {
+    client('writeEdge', [head(), tail()]).then(() => {
       head('');
       tail('');
     });
@@ -81,11 +83,11 @@ const StringList = () => {
   const [string, stringList] = ['', []].map(linkState);
 
   useEffect(() => {
-    service('listString').then(stringList);
+    client('listString').then(stringList);
   }, []);
 
   const onWriteStringClick = () => {
-    service('writeString', string()).then(hash => string(hash));
+    client('writeString', string()).then(hash => string(hash));
   };
 
   const strings = stringList().map(({ id, string }) => (
@@ -117,9 +119,9 @@ const noGrow = flexGrow(0);
 const Console = () => {
   const random = linkState('');
 
-  const onRandomClick = () => service.random().then(random);
+  const onRandomClick = () => client.random().then(random);
   const onTestClick = () => {
-    service(
+    client(
       'code', // Code
       'X9jwENfzyDvyCXKAdZfslKcH6L44mTrV7vOnaJ4RHXo=', // Edge
     ).then(code => {
@@ -135,8 +137,8 @@ const Console = () => {
   return (
     <List>
       <List.Item>
-        <Button onClick={() => service('save')}>Save</Button>
-        <Button onClick={() => service('load')}>Load</Button>
+        <Button onClick={() => client('save')}>Save</Button>
+        <Button onClick={() => client('load')}>Load</Button>
         <Button onClick={onTestClick}>
           Test
         </Button>
