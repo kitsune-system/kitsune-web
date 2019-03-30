@@ -29,6 +29,20 @@ const linkState = initState => {
   return val => val === undefined ? value : setter(val);
 };
 
+const NodeList = () => {
+  const nodeList = linkState([]);
+
+  useEffect(() => {
+    client('built-in-nodes').then(nodeList);
+  }, []);
+
+  const nodes = Object.entries(nodeList()).map(([name, node]) => {
+    return <List.Item key={name}><Node value={node}/> {name}</List.Item>;
+  });
+
+  return <List items={nodes}/>;
+};
+
 const CommandList = () => {
   const commandList = linkState([]);
 
@@ -40,7 +54,7 @@ const CommandList = () => {
     return <List.Item key={hash}><Node value={hash}/> {JSON.stringify(name)}</List.Item>;
   });
 
-  return <Tab.Pane><List items={commands}/></Tab.Pane>;
+  return <List items={commands}/>;
 };
 
 const EdgeList = () => {
@@ -51,7 +65,7 @@ const EdgeList = () => {
   }, []);
 
   const onWriteEdgeClick = () => {
-    client('writeEdge', [head(), tail()]).then(() => {
+    client.writeEdge(head(), tail()).then(() => {
       head('');
       tail('');
     });
@@ -67,7 +81,7 @@ const EdgeList = () => {
   ));
 
   return (
-    <Tab.Pane>
+    <>
       <div>
         <CopyInput type="text" placeholder="Head" {...bind(head)}/>
         <CopyInput type="text" placeholder="Tail" {...bind(tail)}/>
@@ -75,7 +89,7 @@ const EdgeList = () => {
       </div>
 
       <List items={edges}/>
-    </Tab.Pane>
+    </>
   );
 };
 
@@ -87,7 +101,7 @@ const StringList = () => {
   }, []);
 
   const onWriteStringClick = () => {
-    client('writeString', string()).then(hash => string(hash));
+    client.writeString(string()).then(hash => string(hash));
   };
 
   const strings = stringList().map(({ id, string }) => (
@@ -95,12 +109,12 @@ const StringList = () => {
   ));
 
   return (
-    <Tab.Pane>
+    <>
       <CopyInput type="text" placeholder="String" {...bind(string)}/>
       <Button onClick={onWriteStringClick}>Write String</Button>
 
       <List items={strings}/>
-    </Tab.Pane>
+    </>
   );
 };
 
@@ -153,10 +167,13 @@ const Console = () => {
 
       <List.Item>
         <Tab panes={[
-          { menuItem: 'Commands', render: () => <CommandList/> },
-          { menuItem: 'Edges', render: () => <EdgeList/> },
-          { menuItem: 'Strings', render: () => <StringList/> },
-        ]}/>
+          ['Nodes', NodeList],
+          ['Commands', CommandList],
+          ['Edges', EdgeList],
+          ['Strings', StringList],
+        ].map(
+          ([menuItem, Component]) => ({ menuItem, render: () => <Tab.Pane><Component/></Tab.Pane> })
+        )}/>
       </List.Item>
     </List>
   );
