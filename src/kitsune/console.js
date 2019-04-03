@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input, List, Tab } from 'semantic-ui-react';
 
 import buildClient from '../common/client';
+import { BUILT_IN_NODES } from '../common/nodes';
 
 const client = buildClient('http://localhost:8080');
 
@@ -30,17 +31,36 @@ const linkState = initState => {
 };
 
 const NodeList = () => {
-  const nodeList = linkState([]);
+  const [nodeName, nodeList] = ['', []].map(linkState);
 
   useEffect(() => {
     client('built-in-nodes').then(nodeList);
   }, []);
 
+  const onCreateClick = async() => {
+    const stringNode = await client.writeString(nodeName());
+    const randomNode = await client.random();
+
+    let mapNode = await client.getVar(BUILT_IN_NODES);
+    const nodeMap = await client.readMap(mapNode);
+
+    nodeMap[stringNode] = randomNode;
+
+    mapNode = await client.writeMap(nodeMap);
+    await client.setVar(BUILT_IN_NODES, mapNode);
+  };
+
   const nodes = Object.entries(nodeList()).map(([name, node]) => {
     return <List.Item key={name}><Node value={node}/> {name}</List.Item>;
   });
 
-  return <List items={nodes}/>;
+  return (
+    <>
+      <Input {...bind(nodeName)}/>
+      <Button onClick={onCreateClick}>Create</Button>
+      <List items={nodes}/>
+    </>
+  );
 };
 
 const CommandList = () => {
@@ -144,6 +164,8 @@ const Console = () => {
     });
   };
 
+  const onBuildClick = () => client('build').then(path => console.log(`Build Path: ${path}`));
+
   useEffect(() => {
     onRandomClick();
   }, []);
@@ -153,9 +175,8 @@ const Console = () => {
       <List.Item>
         <Button onClick={() => client('save')}>Save</Button>
         <Button onClick={() => client('load')}>Load</Button>
-        <Button onClick={onTestClick}>
-          Test
-        </Button>
+        <Button onClick={onTestClick}>Test</Button>
+        <Button onClick={onBuildClick}>Build</Button>
       </List.Item>
 
       <List.Item>
