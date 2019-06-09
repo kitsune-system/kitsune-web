@@ -14,6 +14,7 @@ const Split = (...listeners) => {
     remove.id = id;
     return remove;
   };
+
   split.add = add;
 
   listeners.forEach(add);

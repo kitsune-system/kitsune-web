@@ -2,6 +2,7 @@ const buf = string => Buffer.from(string, 'base64');
 
 export const BASE64 = buf('AIijUH1v1Jxo6gBDm5rwI4Or80AwPum9At1AWbzw5Lw=');
 export const BINARY = buf('ysyP7SFoE+dbewHpNFWKQi4roiTG+xVnYxcIxA2qfGA=');
+export const BIND_COMMAND = buf('OQSNYHFqQaJ7hOXEkdmsyBhCiKHkSrcYrRKotJQ8d2I=');
 export const BUILT_IN_NODES = buf('tM/g7jdtJbdcGwlxr7JRkqQFZvrgxjuj4re4W7aPOtA=');
 export const CODE = buf('azYkwxJ3FZH7GuMq0z34AAgKDBBFEopUH/qfpdY5l8U=');
 export const COMMAND = buf('2thvxzmTasKTgQrlZkN4Yq4/dCTkemSadDKshbBHi/Q=');
@@ -10,7 +11,9 @@ export const DESTROY = buf('GdMeesaxawq0J2uBEHdytTXNJxbcA0y9kKcyDjVjUh0=');
 export const EDGE = buf('9NeOSRxG9JCQMxyjn8ne/oTHxiaQRfWp4mf96DRzpa0=');
 export const GET = buf('VrJ1NfyNBVvnZetBWZ1wXcEDotZsSUtl4PRkuNezFVU=');
 export const HEAD = buf('rVkGcT3cbljIYjNVAwd7NDYzrgsELAQyju9PwhaDVPI=');
+export const LINE_TO_STDOUT = buf('UXU9B8uJ99bmzmSBfkLDgJJdAIn3G9nVzrJSybVZ1nQ=');
 export const LIST = buf('B0uC9VnQvcC9I7TubvULT/BV9T3gZqa/xn5HBBfZ0r0=');
+export const LIST_N = buf('4QSz4n2p6jkmOdV73q+qJi6KFyErNflcEAZe3+J4dIs=');
 export const MAP_N = buf('4fXleUmgAKEInL1j7LBttHmXPys4rNJLtrx6jFBW8cg=');
 export const MAP_V = buf('Pj49hhtbwrg14s2nHt9QoDsquvWBm2zFoDVGKfZ4f7g=');
 export const NATIVE_NAME = buf('5XtkSqo5nMpeo1Mq4ytpeH9JbgtjBihz0LcbciZv4Ug=');

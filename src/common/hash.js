@@ -7,7 +7,12 @@ const sha256 = sha3.sha3_256;
 
 const edgeMap = {};
 
-export const random = () => crypto.randomBytes(32);
+export const randomBase = (size = 256) => {
+  const len = Math.ceil(size / 8);
+  return crypto.randomBytes(len);
+};
+
+export const random = () => randomBase();
 
 export const base64ToBuffer = base64 => {
   if(!base64)
@@ -22,6 +27,8 @@ export const bufferToBase64 = buffer => {
 
   return buffer.toString('base64');
 };
+
+export const readEdge = node => edgeMap[bufferToBase64(node)];
 
 export const hashList = list => {
   const hash = sha256.create();
@@ -65,5 +72,3 @@ export const deepHashEdge = (...args) => {
 
   return hashEdge(head, tail);
 };
-
-export const readEdge = node => edgeMap[bufferToBase64(node)];

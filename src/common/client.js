@@ -2,8 +2,8 @@ import axios from 'axios';
 
 import { bufferToBase64 as b64, deepHashEdge as E } from '../common/hash';
 import {
-  BASE64, BINARY, CONVERT, DESTROY, EDGE, MAP_N, PIPE, RANDOM, READ,
-  STRING, TO_BASE64, TO_BINARY, VARIABLE_GET, VARIABLE_SET, WRITE,
+  BASE64, BINARY, CONVERT, DESTROY, EDGE, LIST_N, MAP_N, PIPE,
+  RANDOM, READ, STRING, TO_BASE64, TO_BINARY, VARIABLE_GET, VARIABLE_SET, WRITE,
 } from '../common/nodes';
 
 const BIN2B64 = E(CONVERT, [BINARY, BASE64]);
@@ -19,7 +19,12 @@ export const KitsuneClient = request => {
 
   client.wrap = (command, input, before = [], after = []) => {
     const commandList = [...before, command, ...after].map(b64);
-    return client(PIPE, { input, commandList });
+    const args = { commandList };
+
+    if(input)
+      args.input = input;
+
+    return client(PIPE, args);
   };
 
   client.random = () => client.wrap(
@@ -39,7 +44,16 @@ export const KitsuneClient = request => {
     E(DESTROY, EDGE), edgeNode, [B642BIN], [],
   );
 
-  // MAP
+  // LIST
+  client.writeList = list => client.wrap(
+    E(WRITE, LIST_N), list, [TO_BINARY], [BIN2B64]
+  );
+
+  client.readList = listNode => client.wrap(
+    E(READ, LIST_N), listNode, [B642BIN], [TO_BASE64]
+  );
+
+  // Map
   client.writeMap = map => client.wrap(
     E(WRITE, MAP_N), map, [TO_BINARY], [BIN2B64],
   );
@@ -81,4 +95,5 @@ const build = baseURL => {
   const request = buildAxios(baseURL);
   return KitsuneClient(request);
 };
+
 export default build;

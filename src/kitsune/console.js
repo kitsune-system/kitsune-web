@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input, List, Tab } from 'semantic-ui-react';
 
@@ -26,6 +27,8 @@ const bind = state => ({
 });
 
 const linkState = initState => {
+  // TODO: Resove this
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [value, setter] = useState(initState);
   return val => val === undefined ? value : setter(val);
 };
