@@ -9,13 +9,13 @@ test:
   stage: build
   script:
     - npm install
-    - npm run test
+    - ./node_modules/.bin/sakuradite test
 
 build:
   stage: build
   script:
     - npm install
-    - npm run build
+    - ./node_modules/.bin/sakuradite build
   artifacts:
     paths:
       - dist

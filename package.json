@@ -17,6 +17,7 @@
     "react-hot-loader": "^4.9.0",
     "react-redux": "^6.0.0",
     "redux": "^4.0.1",
+    "sakuradite": "^1.1.0",
     "screenfull": "^4.0.0",
     "semantic-ui-react": "^0.85.0",
     "should": "^13.2.3",
