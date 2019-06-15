@@ -1,23 +1,12 @@
-/* eslint-disable */
 import './index.scss';
 
 import React from 'react';
 import { render } from 'react-dom';
 import toastr from 'toastr';
 
-import App from './app';
-import keySplit from './app/input/key-split';
-import actions from './app/store/actions';
+import { build as buildClient } from './common/client';
 import config from 'env/config';
-
-import kitsuneService from './app/kitsune-service';
-
-// Service test
-// kitsuneService.random().then(random => {
-//   console.log('Random:', random);
-// });
-
-const { setActiveView } = actions;
+import App from './kitsune/app';
 
 // Toastr config
 toastr.options = {
@@ -25,15 +14,20 @@ toastr.options = {
   progressBar: true
 };
 
+const client = buildClient(config.kitsuneUrl);
+
 // Initial logging
 console.log('Hello Kitsune');
 console.log('Config', config);
 
-// Register KeyHandler
-window.addEventListener('keydown', keySplit);
+// Service test
+client.random().then(random => {
+  console.log('Random:', random);
+  toastr.info(`Random: ${random}`);
+});
 
-// Load initial view based on location or default
-setActiveView('vsplit');
+// Register KeyHandler
+// window.addEventListener('keydown', keySplit);
 
 // Render App
 render(<App/>, document.getElementById('root'));

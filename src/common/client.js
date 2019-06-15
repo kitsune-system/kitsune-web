@@ -91,9 +91,7 @@ const buildAxios = baseURL => {
 };
 
 // EXPORT
-const build = baseURL => {
+export const build = baseURL => {
   const request = buildAxios(baseURL);
   return KitsuneClient(request);
 };
-
-export default build;
