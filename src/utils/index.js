@@ -1,5 +1,10 @@
 import _ from 'lodash';
 
+import bind from './bind';
+import linkState from './link-state';
+
+export { bind, linkState };
+
 export const mapWith = (input, map) => input.map(key => map[key]);
 
 export const pipe = (...fns) => {

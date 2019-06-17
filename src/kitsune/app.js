@@ -1,7 +1,7 @@
 import React from 'react';
 
-const App = () => {
-  return <div>Hello World</div>;
-};
+import Console from './console';
+
+const App = () => <Console/>;
 
 export default App;

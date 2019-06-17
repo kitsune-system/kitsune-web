@@ -2,69 +2,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input, List, Tab } from 'semantic-ui-react';
 
-import buildClient from '../common/client';
-import { BUILT_IN_NODES } from '../common/nodes';
+import { build as buildClient } from '../common/client';
+import { bind, linkState } from '../utils';
+
+import { CopyInput, Node } from '../components';
+
+import NodeList from './tabs/node-list';
 
 const client = buildClient('http://localhost:8080');
-
-const CopyInput = props => {
-  const inputEl = useRef(null);
-
-  const copy = () => {
-    inputEl.current.select();
-    document.execCommand('copy');
-  };
-
-  const action = <Button icon="copy outline" onClick={copy}/>;
-  return <Input ref={inputEl} action={action} {...props}/>;
-};
-
-const Node = props => <CopyInput readOnly type="text" {...props}/>;
-
-const bind = state => ({
-  onChange: e => state(e.currentTarget.value),
-  value: state(),
-});
-
-const linkState = initState => {
-  // TODO: Resove this
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [value, setter] = useState(initState);
-  return val => val === undefined ? value : setter(val);
-};
-
-const NodeList = () => {
-  const [nodeName, nodeList] = ['', []].map(linkState);
-
-  useEffect(() => {
-    client('built-in-nodes').then(nodeList);
-  }, []);
-
-  const onCreateClick = async() => {
-    const stringNode = await client.writeString(nodeName());
-    const randomNode = await client.random();
-
-    let mapNode = await client.getVar(BUILT_IN_NODES);
-    const nodeMap = await client.readMap(mapNode);
-
-    nodeMap[stringNode] = randomNode;
-
-    mapNode = await client.writeMap(nodeMap);
-    await client.setVar(BUILT_IN_NODES, mapNode);
-  };
-
-  const nodes = Object.entries(nodeList()).map(([name, node]) => {
-    return <List.Item key={name}><Node value={node}/> {name}</List.Item>;
-  });
-
-  return (
-    <>
-      <Input {...bind(nodeName)}/>
-      <Button onClick={onCreateClick}>Create</Button>
-      <List items={nodes}/>
-    </>
-  );
-};
 
 const CommandList = () => {
   const commandList = linkState([]);
@@ -175,6 +120,8 @@ const Console = () => {
 
   return (
     <List>
+      <CopyInput/>
+
       <List.Item>
         <Button onClick={() => client('save')}>Save</Button>
         <Button onClick={() => client('load')}>Load</Button>
@@ -191,12 +138,12 @@ const Console = () => {
 
       <List.Item>
         <Tab panes={[
-          ['Nodes', NodeList],
-          ['Commands', CommandList],
-          ['Edges', EdgeList],
-          ['Strings', StringList],
+          ['Nodes', <NodeList loadNodes={ret => client('built-in-nodes').then(ret)}/>],
+          ['Commands', <CommandList/>],
+          ['Edges', <EdgeList/>],
+          ['Strings', <StringList/>],
         ].map(
-          ([menuItem, Component]) => ({ menuItem, render: () => <Tab.Pane><Component/></Tab.Pane> })
+          ([menuItem, content]) => ({ menuItem, render: () => <Tab.Pane>{content}</Tab.Pane> })
         )}/>
       </List.Item>
     </List>
