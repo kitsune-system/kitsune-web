@@ -2,7 +2,7 @@ import { bindActionCreators } from 'redux';
 
 import * as actionCreators from './action-creators';
 import kitsuneService from '../kitsune-service';
-import store from './index';
+import store from '.';
 
 const basicActions = bindActionCreators(actionCreators, store.dispatch);
 const { addNode } = basicActions;

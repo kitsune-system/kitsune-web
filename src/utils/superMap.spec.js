@@ -1,4 +1,4 @@
-import { superMap } from './index';
+import { superMap } from '.';
 
 const doublePlusOne = x => (x * 2) + 1;
 

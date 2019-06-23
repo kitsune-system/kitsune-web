@@ -9,7 +9,7 @@ import { CopyInput, Node } from '../components';
 
 import NodeList from './tabs/node-list';
 
-const client = buildClient('http://localhost:8080');
+const client = buildClient({ kitsuneHost: 'localhost:8080', secure: false });
 
 const CommandList = () => {
   const commandList = linkState([]);

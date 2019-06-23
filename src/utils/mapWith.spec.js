@@ -1,4 +1,4 @@
-import { mapWith } from './index';
+import { mapWith } from '.';
 
 describe('mapWith', () => {
   it('should work', () => {

@@ -15,7 +15,7 @@ export const base64ToBuffer = base64 => {
 
 export const bufferToBase64 = buffer => {
   if(!buffer)
-    throw new Error('`base64` must not be null');
+    throw new Error('`buffer` must not be null');
 
   return buffer.toString('base64');
 };
@@ -63,4 +63,9 @@ export const deepHashEdge = (...args) => {
     tail = deepHashEdge(...tail);
 
   return hashEdge(head, tail);
+};
+
+export const pseudoRandom = seed => () => {
+  seed = hashList([seed]);
+  return seed;
 };

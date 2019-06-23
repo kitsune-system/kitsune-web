@@ -1,4 +1,4 @@
-import { pipe } from './index';
+import { pipe } from '.';
 
 export const bind = (rule, action, defaultResult) => {
   return (...args) => {

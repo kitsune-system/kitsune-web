@@ -14,11 +14,11 @@ toastr.options = {
   progressBar: true
 };
 
-const client = buildClient(config.kitsuneUrl);
+const client = buildClient(config);
 
 // Initial logging
 console.log('Hello Kitsune');
-console.log('Config', config);
+console.log('Config:', config);
 
 // Service test
 client.random().then(random => {

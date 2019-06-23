@@ -1,5 +1,6 @@
 const config = {
-  kitsuneUrl: 'http://localhost:8080'
+  kitsuneHost: 'localhost:8080',
+  secure: false,
 };
 
 export default config;

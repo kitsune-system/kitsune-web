@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { bufferToBase64 as b64, deepHashEdge as E } from '../common/hash';
 import {
-  BASE64, BINARY, CONVERT, DESTROY, EDGE, LIST_N, MAP_N, PIPE,
+  BASE64, BINARY, CONVERT, ERASE, EDGE, LIST_N, MAP_N, PIPE,
   RANDOM, READ, STRING, TO_BASE64, TO_BINARY, VARIABLE_GET, VARIABLE_SET, WRITE,
 } from '../common/nodes';
 
@@ -41,7 +41,7 @@ export const KitsuneClient = request => {
   );
 
   client.destroyEdge = edgeNode => client.wrap(
-    E(DESTROY, EDGE), edgeNode, [B642BIN], [],
+    E(ERASE, EDGE), edgeNode, [B642BIN], [],
   );
 
   // LIST
@@ -91,7 +91,23 @@ const buildAxios = baseURL => {
 };
 
 // EXPORT
-export const build = baseURL => {
-  const request = buildAxios(baseURL);
+export const build = config => {
+  const wsProto = config.secure ? 'wss://' : 'ws://';
+  const webProto = config.secure ? 'httsp://' : 'http://';
+
+  const wsUrl = wsProto + config.kitsuneHost;
+  const webUrl = webProto + config.kitsuneHost;
+
+  const socket = new WebSocket(wsUrl);
+  window.socket = socket;
+  socket.addEventListener('open', () => {
+    console.log('Connected to WebSocket server...');
+    socket.send('Hello');
+  });
+  socket.addEventListener('message', event => {
+    console.log('From Server:', event.data);
+  });
+
+  const request = buildAxios(webUrl);
   return KitsuneClient(request);
 };
