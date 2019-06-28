@@ -1,11 +1,11 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
+import { connect } from 'react-redux';
 import { Button, Input, List, Tab } from 'semantic-ui-react';
 
+import { CopyInput, Node } from '../components';
 import { build as buildClient } from '../common/client';
 import { bind, linkState } from '../utils';
-
-import { CopyInput, Node } from '../components';
 
 import NodeList from './tabs/node-list';
 
@@ -98,7 +98,9 @@ const Flex = styled.div`{
 const flexGrow = (val = 1) => ({ style: { flexGrow: val } });
 const noGrow = flexGrow(0);
 
-const Console = () => {
+export const Console = props => {
+  const { myValue } = props;
+
   const random = linkState('');
 
   const onRandomClick = () => client.random().then(random);
@@ -120,7 +122,7 @@ const Console = () => {
 
   return (
     <List>
-      <CopyInput/>
+      <CopyInput value={myValue}/>
 
       <List.Item>
         <Button onClick={() => client('save')}>Save</Button>
@@ -138,10 +140,10 @@ const Console = () => {
 
       <List.Item>
         <Tab panes={[
-          ['Nodes', <NodeList loadNodes={ret => client('built-in-nodes').then(ret)}/>],
-          ['Commands', <CommandList/>],
-          ['Edges', <EdgeList/>],
-          ['Strings', <StringList/>],
+          // ['Nodes', <NodeList loadNodes={ret => client('built-in-nodes').then(ret)}/>],
+          // ['Commands', <CommandList/>],
+          // ['Edges', <EdgeList/>],
+          // ['Strings', <StringList/>],
         ].map(
           ([menuItem, content]) => ({ menuItem, render: () => <Tab.Pane>{content}</Tab.Pane> })
         )}/>
@@ -150,4 +152,4 @@ const Console = () => {
   );
 };
 
-export default Console;
+export default connect(state => ({ myValue: state.value }))(Console);

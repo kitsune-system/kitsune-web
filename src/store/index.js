@@ -1,57 +1,24 @@
-import { combineReducers } from 'redux';
-
+/* eslint-disable */
 import createStore from 'env/create-store';
 
-import nodeListReducer from '../node-list/reducer';
-import viewTreeReducer from '../view-tree/reducer';
+import { Action, Reducer } from './redux-utils';
 
-const reducer = combineReducers({
-  nodeList: nodeListReducer,
-  viewTree: viewTreeReducer
+const reducer = Reducer({
+  TEST: (state, action) => {
+    return { ...state, value: action.value };
+  }
+}, { value: "Nothing yet..." });
+
+export const store = createStore(reducer);
+
+console.log('INIT', store.getState());
+store.subscribe(() => {
+  console.log('SUB', store.getState());
 });
 
-const store = createStore(reducer);
-
-const getViewTree = () => {
-  const state = store.getState();
-  return state.viewTree;
-};
-
-export const getViewState = view => {
-  const viewTree = getViewTree();
-
-  if(view === undefined)
-    view = viewTree.activeView;
-
-  return viewTree.children[view] || {};
-};
-
-const getSubView = view => {
-  const viewState = getViewState(view);
-
-  const { activeView, children = {} } = viewState;
-  return children[activeView];
-};
-
-const collectActiveView = (viewId, views, list = []) => {
-  const subView = getSubView(viewId);
-
-  if(subView) {
-    const child = getViewState(subView);
-    if(child)
-      collectActiveView(child, views, list);
-    list.push(subView);
-  }
-
-  return list;
-};
-
-export const getActiveViewList = () => {
-  const { activeView, children: views } = getViewTree();
-  const list = collectActiveView(activeView, views);
-
-  list.push(activeView);
-  return list;
-};
+const test = Action('TEST');
+setTimeout(() => {
+  store.dispatch(test({ value: 'Hello World' }));
+}, 3000);
 
 export default store;

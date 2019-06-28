@@ -1,38 +1,15 @@
 /* eslint-disable */
 import _ from 'lodash';
-import { combineReducers, createStore } from 'redux';
+import { createStore } from 'redux';
 
-const reduceMe = (name = null, reducerDef) => {
-  const type = typeof reducerDef;
+export const Action = type => args => {
+  if(typeof args !== 'object')
+    args = { value: args };
 
-  switch(type) {
-    case 'function':
-      return reducerDef;
-    case 'object':
-      const mapped = _.mapValues(reducerDef, def => reduceMe(def));
-      return combineReducers(mapped);
-    default:
-      throw new Error('reducerDef must be function or object');
-  }
+  return { type, ...args };
 };
 
-const doSomething = (actions, initialState) => {
-  const myActions = _.mapValues(actions, (action, name) => {
-    console.log('A', name, action);
-  });
-
-  const reducer = reduceMe(actions);
-  debugger;
-
-  const store = createStore(reducer, initialState);
-  return { actions, store };
-};
-
-const Action = type => {
-  return args => ({ ...args, type });
-};
-
-const Reducer = (handlers, initialState) => {
+export const Reducer = (handlers, initialState) => {
   return (oldState, action) => {
     if(oldState === undefined)
       return initialState;
@@ -47,5 +24,3 @@ const Reducer = (handlers, initialState) => {
     return state;
   };
 };
-
-export { Action, Reducer, doSomething };
