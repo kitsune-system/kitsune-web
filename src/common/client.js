@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import { bufferToBase64 as b64, deepHashEdge as E } from '../common/hash';
 import {
   BASE64, BINARY, CONVERT, ERASE, EDGE, LIST_N, MAP_N, PIPE,
@@ -9,16 +7,7 @@ import {
 const BIN2B64 = E(CONVERT, [BINARY, BASE64]);
 const B642BIN = E(CONVERT, [BASE64, BINARY]);
 
-export const KitsuneClient = (request, webSocket) => {
-  webSocket.addEventListener('open', () => {
-    console.log('Connected to WebSocket server...');
-    webSocket.send('Hello');
-  });
-  webSocket.addEventListener('message', event => {
-    const msg = JSON.parse(event.data);
-    console.log('From Server:', msg);
-  });
-
+const KitsuneClient = request => {
   const client = (command, input) => {
     if(typeof input !== 'object')
       input = JSON.stringify(input);
@@ -88,27 +77,4 @@ export const KitsuneClient = (request, webSocket) => {
   return client;
 };
 
-const buildAxios = baseURL => {
-  const result = axios.create({
-    baseURL,
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  result.interceptors.response.use(res => res.data);
-
-  return result;
-};
-
-// EXPORT
-export const build = config => {
-  const wsProto = config.secure ? 'wss://' : 'ws://';
-  const webProto = config.secure ? 'httsp://' : 'http://';
-
-  const wsUrl = wsProto + config.kitsuneHost;
-  const webUrl = webProto + config.kitsuneHost;
-
-  const request = buildAxios(webUrl);
-  const webSocket = new WebSocket(wsUrl);
-
-  return KitsuneClient(request, webSocket);
-};
+export default KitsuneClient;

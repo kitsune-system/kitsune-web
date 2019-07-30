@@ -14,7 +14,9 @@ const NodeList = props => {
   const [nodeName, nodeList] = ['', {}].map(linkState);
 
   // TODO: Replace with with a follow/watch/track
-  useEffect(() => { loadNodes(nodes => console.log('NODES:', nodes)) });
+  useEffect(() => {
+    loadNodes(nodes => console.log('NODES:', nodes))
+  }, []);
 
   const onCreateClick = async() => onCreateNode(nodeName());
 
