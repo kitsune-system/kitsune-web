@@ -27,16 +27,15 @@ export const Console = props => {
   const { random } = props;
 
   const { random: getRandom } = build('actions');
+  const client = build('webClient');
 
-  const onTestClick = () => {
-    // client(
-    //   'code', // Code
-    //   'X9jwENfzyDvyCXKAdZfslKcH6L44mTrV7vOnaJ4RHXo=', // Edge
-    // ).then(code => {
-    //   console.log('LEN:', code.length);
-    //   console.log('CODE:', code);
-    // });
-  };
+  const onTestClick = () => client(
+    'code', // Code
+    'X9jwENfzyDvyCXKAdZfslKcH6L44mTrV7vOnaJ4RHXo=', // Edge
+  ).then(code => {
+    console.log('LEN:', code.length);
+    console.log('CODE:', code);
+  });
 
   const onBuildClick = () => {
     // client('build').then(path => console.log(`Build Path: ${path}`));

@@ -1,16 +1,35 @@
+import { KitsuneClient } from '@kitsune-system/common';
 import axios from 'axios';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
+import { createGlobalStyle } from 'styled-components';
 import toastr from 'toastr';
 
 import createStore from 'env/create-store';
 import baseConfig from 'env/config';
 
-import KitsuneClient from '../common/client';
 import reducer from '../store/reducer';
 
 import Console from './console';
+
+const GlobalStyle = createGlobalStyle`
+  body, #root {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+
+    font-family: monospace;
+  }
+
+  // toastr
+  #toast-container > div {
+    opacity:1;
+  }
+`;
 
 const buildConfig = {
   config: () => {
@@ -27,6 +46,7 @@ const buildConfig = {
 
   App: build => () => (
     <Provider store={build('store')}>
+      <GlobalStyle/>
       <Console/>
     </Provider>
   ),

@@ -1,4 +1,4 @@
-import './index.scss';
+import 'toastr/build/toastr.css';
 
 import build from './kitsune/build';
 

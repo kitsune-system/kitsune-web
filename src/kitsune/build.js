@@ -1,4 +1,4 @@
-import { Builder } from '@kitsune-system/kitsune-common';
+import { Builder } from '@gamedevfox/katana';
 import config from './config';
 
 const build = Builder(config);

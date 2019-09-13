@@ -1,4 +1,4 @@
-import { pipe } from '.';
+import { pipe } from './index';
 
 describe('pipe(fns)', () => {
   it('should work', () => {

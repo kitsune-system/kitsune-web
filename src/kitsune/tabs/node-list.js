@@ -6,7 +6,7 @@ import { bind, linkState } from '../../utils';
 
 import Node from '../../components/node';
 
-// import { BUILT_IN_NODES } from '../../common/nodes';
+// import { BUILT_IN_NODES } from '@kitsune-system/kitsune-common';
 
 const NodeList = props => {
   const { loadNodes, onCreateNode } = props;
