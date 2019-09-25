@@ -1,34 +1,20 @@
-import { bindActionCreators } from 'redux';
+export const buildActions = build => {
+  const store = build('store');
 
-import * as actionCreators from './action-creators';
-import kitsuneService from '../kitsune-service';
-import store from '.';
+  const socket = build('socket');
+  const webClient = build('webClient');
 
-const basicActions = bindActionCreators(actionCreators, store.dispatch);
-const { addNode } = basicActions;
+  const entry = key => store.dispatch({ type: 'ENTRY', key });
+  const pushEntry = () => store.dispatch({ type: 'PUSH_ENTRY' });
+  const update = data => store.dispatch({ type: 'UPDATE', data });
 
-const newNode = () => {
-  kitsuneService.random().then(result =>
-    addNode({ id: result })
-  );
+  const random = () => webClient.random()
+    .then(node => update({ random: node }));
+
+  const watch = id => {
+    socket('WATCH', id);
+    return () => socket('UNWATCH', id);
+  };
+
+  return { entry, pushEntry, random, update, watch };
 };
-
-const writeString = (string, hash) => {
-  if(hash) {
-    addNode({ id: hash, string });
-    return Promise.resolve();
-  }
-
-  return kitsuneService.writeString(string).then(hash => {
-    console.log(`Hash for "${string}": ${hash}`);
-    addNode({ id: hash, string });
-  });
-};
-
-const actions = {
-  ...basicActions,
-
-  newNode,
-  writeString
-};
-export default actions;

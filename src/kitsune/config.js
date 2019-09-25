@@ -1,37 +1,21 @@
+import { Keyboard, Split, on } from '@gamedevfox/katana';
 import { KitsuneClient } from '@kitsune-system/common';
 import axios from 'axios';
 import React from 'react';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { createGlobalStyle } from 'styled-components';
 import toastr from 'toastr';
 
 import createStore from 'env/create-store';
 import baseConfig from 'env/config';
 
+import { buildActions } from '../store/actions';
 import reducer from '../store/reducer';
 
-import Console from './console';
-
-const GlobalStyle = createGlobalStyle`
-  body, #root {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 4px;
-
-    font-family: monospace;
-  }
-
-  // toastr
-  #toast-container > div {
-    opacity:1;
-  }
-`;
+import { buildConfig as appBuildConfig } from './app';
 
 const buildConfig = {
+  ...appBuildConfig,
+
   config: () => {
     const config = { ...baseConfig };
 
@@ -44,31 +28,7 @@ const buildConfig = {
     return config;
   },
 
-  App: build => () => (
-    <Provider store={build('store')}>
-      <GlobalStyle/>
-      <Console/>
-    </Provider>
-  ),
-
-  actions: build => {
-    const store = build('store');
-
-    const socket = build('socket');
-    const webClient = build('webClient');
-
-    const actions = {};
-
-    actions.random = () => webClient.random().then(random => {
-      store.dispatch({ type: 'RANDOM', value: random });
-    });
-    actions.watch = id => {
-      socket('WATCH', id);
-      return () => socket('UNWATCH', id);
-    };
-
-    return actions;
-  },
+  actions: buildActions,
 
   axios: build => {
     const baseURL = build('config').webUrl;
@@ -82,7 +42,8 @@ const buildConfig = {
 
   store: () => createStore(reducer),
 
-  webClient: build => KitsuneClient(build('axios')),
+  remoteSystem: build => KitsuneClient(build('axios')),
+  webClient: build => build('remoteSystem'),
 
   socket: build => {
     const pending = [];
@@ -110,7 +71,17 @@ const buildConfig = {
     return socket;
   },
 
+  keyboard: () => Keyboard(),
+
   runFn: build => () => {
+    const [
+      App, { entry, pushEntry }, config, keyboard, webClient
+    ] = [
+      'App', 'actions', 'config', 'keyboard', 'webClient'
+    ].map(name => build(name));
+
+    build('socket');
+
     // Toastr config
     toastr.options = {
       hideDuration: 300,
@@ -119,23 +90,35 @@ const buildConfig = {
 
     // Initial logging
     console.log('Hello Kitsune');
-    console.log('Config:', build('config'));
+    console.log('Config:', config);
 
     // Service test
-    const client = build('webClient');
-    client.random().then(random => {
+    webClient.random().then(random => {
       const msg = `Random: ${random}`;
       console.log(msg);
       toastr.info(msg);
     });
 
-    // build('actions');
-    build('socket');
+    keyboard.output.down(key => {
+      if(/Enter|Space/.test(key))
+        pushEntry();
 
-    // Register KeyHandler
-    // window.addEventListener('keydown', keySplit);
+      if(/Backspace|Key./.test(key))
+        entry(key);
+    });
 
-    const App = build('App');
+    const Focus = (target = global) => {
+      const [input, output] = Split();
+
+      on(target, 'focus', () => input(true));
+      on(target, 'blur', () => input(false));
+
+      return output;
+    };
+
+    const focus = Focus();
+    focus(() => keyboard.clear());
+
     render(<App/>, document.getElementById('root'));
   }
 };

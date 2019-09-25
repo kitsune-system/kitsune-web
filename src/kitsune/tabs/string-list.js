@@ -5,7 +5,7 @@ import { Button, List } from 'semantic-ui-react';
 import { CopyInput, Node } from '../../components';
 import { bind, linkState } from '../../utils';
 
-import build from '../build';
+import { build } from '../index';
 
 const StringList = () => {
   const [{ watch }, socket] = ['actions', 'socket'].map(build);

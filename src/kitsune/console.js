@@ -1,35 +1,28 @@
-import React from 'react';
+/* eslint-disable */
+import React, { useEffect, useState } from 'react';
+import { hot } from 'react-hot-loader/root';
 import { connect } from 'react-redux';
-import { Button, List, Tab } from 'semantic-ui-react';
+import { Button, List } from 'semantic-ui-react';
 
-import { Node } from '../components';
+import { Flex, Node } from '../components';
 
-// import NodeList from './tabs/node-list';
-import CommandList from './tabs/command-list';
-import EdgeList from './tabs/edge-list';
-import StringList from './tabs/string-list';
-
-import build from './build';
-
-import styled from 'styled-components';
-const Flex = styled.div`{
-  display: flex;
-
-  & > * {
-    flex-grow: 1;
-  }
-}`;
+import { build } from './index';
 
 const flexGrow = (val = 1) => ({ style: { flexGrow: val } });
 const noGrow = flexGrow(0);
 
 export const Console = props => {
-  const { random } = props;
+  const { entry, entryList, nodes, random } = props;
 
   const { random: getRandom } = build('actions');
-  const client = build('webClient');
+  const webClient = build('webClient');
 
-  const onTestClick = () => client(
+  const keyboard = build('keyboard');
+
+  const [keys, setKeys] = useState({ ...keyboard() });
+  useEffect(() => keyboard.output.change(() => setKeys({ ...keyboard() })), []);
+
+  const onTestClick = () => webClient(
     'code', // Code
     'X9jwENfzyDvyCXKAdZfslKcH6L44mTrV7vOnaJ4RHXo=', // Edge
   ).then(code => {
@@ -37,19 +30,14 @@ export const Console = props => {
     console.log('CODE:', code);
   });
 
-  const onBuildClick = () => {
-    // client('build').then(path => console.log(`Build Path: ${path}`));
-  };
-
   return (
     <List>
-      <List.Item>
-        {/*
-        <Button onClick={() => client('save')}>Save</Button>
-        <Button onClick={() => client('load')}>Load</Button>
-        */}
-        <Button onClick={onTestClick}>Test</Button>
-        <Button onClick={onBuildClick}>Build</Button>
+      <List.Item style={{ textAlign: 'center', color: entry ? 'red' : 'darkorange', fontWeight: 'bold' }}>
+        {
+          entry ?
+            <><span style={{ color: 'black' }}>&gt;&gt;&gt;</span> {entry} <span style={{ color: 'black' }}>&lt;&lt;&lt;</span></> :
+            'Kitsune'
+        }
       </List.Item>
 
       <List.Item>
@@ -60,19 +48,31 @@ export const Console = props => {
       </List.Item>
 
       <List.Item>
-        <Tab panes={[
-          // ['Nodes', <NodeList key="nodeList" loadNodes={/ret => client('built-in-nodes').then(ret)}/>],
-          ['Commands', <CommandList key="commandList"/>],
-          ['Edges', <EdgeList key="edgeList"/>],
-          ['Strings', <StringList key="stringList"/>],
-        ].map(
-          ([menuItem, content]) => ({ menuItem, render: () => <Tab.Pane>{content}</Tab.Pane> })
-        )}/>
+        <Button onClick={onTestClick}>Test</Button>
+      </List.Item>
+
+      <List.Item>
+        <h3>Entry List</h3>
+        <ul>
+          {entryList.map(entry => <li key={entry}>{entry}</li>)}
+        </ul>
+      </List.Item>
+
+      <List.Item>
+        <h3>Nodes</h3>
+        <ul>
+          {Object.keys(nodes).map(key => <li key={key}>{key}</li>)}
+        </ul>
+      </List.Item>
+
+      <List.Item>
+        <h3>Keys</h3>
+        <pre>
+          {JSON.stringify(Object.keys(keys), null, 2)}
+        </pre>
       </List.Item>
     </List>
   );
 };
 
-export default connect(
-  state => ({ random: state.random }),
-)(Console);
+export default hot(connect(state => state)(Console));

@@ -4,7 +4,7 @@ import { List } from 'semantic-ui-react';
 
 import { linkState } from '../../utils';
 
-import build from '../build';
+import { build } from '../index';
 
 const CommandList = () => {
   const commandList = linkState([]);
