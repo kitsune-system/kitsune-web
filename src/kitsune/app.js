@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
 
 import Console from './console';
+import { SystemContext } from './context';
 
 const GlobalStyle = createGlobalStyle`
   body, #root {
@@ -22,11 +23,11 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export const buildConfig = {
-  App: build => () => (
+export const buildApp = build => () => (
+  <SystemContext.Provider value="ALRIGHT!!">
     <Provider store={build('store')}>
       <GlobalStyle/>
       <Console/>
     </Provider>
-  ),
-};
+  </SystemContext.Provider>
+);

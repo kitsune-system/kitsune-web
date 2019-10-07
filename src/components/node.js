@@ -1,7 +1,5 @@
 import React from 'react';
 
-import CopyInput from './copy-input';
+import { CopyInput } from './copy-input';
 
-const Node = props => <CopyInput readOnly type="text" {...props}/>;
-
-export default Node;
+export const Node = props => <CopyInput readOnly type="text" {...props}/>;

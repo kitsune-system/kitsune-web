@@ -1,16 +1,12 @@
 import 'toastr/build/toastr.css';
+import toastr from 'toastr';
 
-import { BUILT_IN_NODES, RANDOM } from '@kitsune-system/common';
+// Toastr config
+toastr.options = {
+  hideDuration: 300,
+  progressBar: true
+};
 
-import { build } from './kitsune';
+import { run } from './kitsune';
 
-const { update } = build('actions');
-const webClient = build('webClient');
-
-webClient(RANDOM, null, node => console.log('NODE', node));
-webClient(BUILT_IN_NODES, null, nodes => {
-  console.log('NODES', nodes);
-  update({ nodes });
-});
-
-build('runFn')();
+run();

@@ -22,7 +22,7 @@ const Styles = styled.div`
   }
 `;
 
-const Overlay = props => {
+export const Overlay = props => {
   return (
     <Styles>
       <div className="content">
@@ -35,5 +35,3 @@ const Overlay = props => {
 Overlay.propTypes = {
   children: PropTypes.node.isRequired
 };
-
-export default Overlay;

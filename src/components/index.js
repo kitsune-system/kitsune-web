@@ -1,3 +1,3 @@
-export CopyInput from './copy-input';
+export { CopyInput } from './copy-input';
 export { Flex } from './flex';
-export Node from './node';
+export { Node } from './node';

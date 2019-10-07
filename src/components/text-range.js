@@ -25,7 +25,7 @@ const Styles = styled.div`
   }
 `;
 
-export default class TextRange extends React.Component {
+export class TextRange extends React.Component {
   constructor() {
     super();
     this.state = { value: '' };
