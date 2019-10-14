@@ -1,9 +1,10 @@
+import { CORE } from '@kitsune-system/common';
 import React from 'react';
-import { Provider } from 'react-redux';
+import { Provider as StoreProvider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
 
 import Console from './console';
-import { SystemContext } from './context';
+import { Provider as SystemProvider } from './context';
 
 const GlobalStyle = createGlobalStyle`
   body, #root {
@@ -23,11 +24,17 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export const buildApp = build => () => (
-  <SystemContext.Provider value="ALRIGHT!!">
-    <Provider store={build('store')}>
-      <GlobalStyle/>
-      <Console/>
-    </Provider>
-  </SystemContext.Provider>
-);
+export const coreConfig = {
+  APP: {
+    fn: ({ store, system }) => (_, output) => output(() => (
+      <SystemProvider system={system}>
+        <StoreProvider store={store}>
+          <GlobalStyle/>
+          <Console/>
+        </StoreProvider>
+      </SystemProvider>
+    )),
+    bind: { system: CORE },
+    inject: { store: 'STORE' },
+  },
+};

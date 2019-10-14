@@ -2,33 +2,42 @@ import {
   deepHashEdge as E, STRING, RANDOM, WRITE
 } from '@kitsune-system/common';
 
-export const buildActions = build => {
-  const store = build('store');
-
-  const socket = build('socket');
-  const core = build('core');
-
-  const entry = key => store.dispatch({ type: 'ENTRY', key });
-  const pushEntry = () => {
-    const { entry } = store.getState();
-    core(E(WRITE, STRING), writeString => writeString(entry));
-
-    store.dispatch({ type: 'PUSH_ENTRY' });
+const Action = fn => {
+  return {
+    fn: ({ store }) => (...args) => {
+      const action = fn(...args);
+      store.dispatch(action);
+    },
+    inject: { store: 'STORE' },
   };
+};
 
-  const clearEntry = () => store.dispatch({ type: 'CLEAR_ENTRY' });
+export const coreConfig = {
+  ACTION_ENTRY: Action(key => ({ type: 'ENTRY', key })),
+  ACTION_CLEAR_ENTRY: Action(() => ({ type: 'CLEAR_ENTRY' })),
+  ACTION_PUSH_ENTRY: {
+    fn: ({ store, writeString }) => () => {
+      const { entry } = store.getState();
+      writeString(entry, id => console.log('WRITE STRING ID:', id));
 
-  const update = data => store.dispatch({ type: 'UPDATE', data });
-  const updateEdge = field => store.dispatch({ type: 'UPDATE_EDGE', field });
+      store.dispatch({ type: 'PUSH_ENTRY' });
+    },
+    bind: { writeString: E(WRITE, STRING) },
+    inject: { store: 'STORE' },
+  },
 
-  const random = () => core(RANDOM, random => random(null, id => {
-    update({ selected: id });
-  }));
+  ACTION_UPDATE: Action(data => ({ type: 'UPDATE', data })),
+  ACTION_UPDATE_EDGE: Action(field => ({ type: 'UPDATE_EDGE', field })),
 
-  const watch = id => {
-    socket('WATCH', id);
-    return () => socket('UNWATCH', id);
-  };
+  ACTION_RANDOM: {
+    fn: ({ random, socketSystem, update }) => () => {
+      socketSystem(RANDOM, random => random(null, id => {
+        console.log('RANDOM (from Socket):', id);
+      }));
 
-  return { clearEntry, entry, pushEntry, random, update, updateEdge, watch };
+      random(null, id => update({ selected: id }));
+    },
+    bind: { random: RANDOM, update: 'ACTION_UPDATE' },
+    inject: { socketSystem: 'SOCKET_SYSTEM' },
+  },
 };

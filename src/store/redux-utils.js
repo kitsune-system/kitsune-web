@@ -1,7 +1,3 @@
-/* eslint-disable */
-import _ from 'lodash';
-import { createStore } from 'redux';
-
 export const Action = type => args => {
   if(typeof args !== 'object')
     args = { value: args };

@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { build } from '../../kitsune';
-
-export const Keys = () => {
-  const keyboard = build('keyboard');
-
+export const Keys = ({ keyboard }) => {
   const [keys, setKeys] = useState({ ...keyboard() });
   useEffect(() => keyboard.output.change(() => setKeys({ ...keyboard() })), []);
 

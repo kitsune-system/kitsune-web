@@ -1,6 +1,6 @@
 import { Split } from '@gamedevfox/katana';
 
-export const Socket = socketUrl => {
+export const BrowserSocket = socketUrl => {
   const pending = [];
   let send = msg => pending.push(msg);
 
@@ -8,19 +8,19 @@ export const Socket = socketUrl => {
 
   const webSocket = new WebSocket(socketUrl);
 
-  const socket = (action, data) => {
-    const actionStr = JSON.stringify([action, data]);
-    send(actionStr);
+  const socket = msg => {
+    const msgStr = JSON.stringify(msg);
+    send(msgStr);
   };
 
   webSocket.addEventListener('open', () => {
-    console.log('[Connected to WebSocket server]');
+    console.log('[[ Connected to WebSocket server ]]');
 
     send = msg => webSocket.send(msg);
     pending.forEach(msg => send(msg));
   });
-  webSocket.addEventListener('message', event => {
-    const msg = JSON.parse(event.data);
+  webSocket.addEventListener('message', ({ data }) => {
+    const msg = JSON.parse(data);
     input(msg);
   });
 

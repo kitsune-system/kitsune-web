@@ -1,117 +1,98 @@
-import { Builder, Switch, on } from '@gamedevfox/katana';
-import { LOOKUP_NATIVE_NAME, RANDOM } from '@kitsune-system/common';
+import { Focus, Keyboard, noOp } from '@gamedevfox/katana';
+import {
+  HttpSystem, WebSocketSystem, value, CORE, CORE_SUBSYSTEMS, RANDOM,
+} from '@kitsune-system/common';
 import React from 'react';
 import { render } from 'react-dom';
 import toastr from 'toastr';
 
-import config from './config';
+import env from 'env/config';
+import createStore from 'env/create-store';
 
-export const build = Builder(config);
+import { reducer } from '../store/reducer';
+import { BrowserSocket } from './browser-socket';
 
-const configureKeyboard = () => {
-  const [
-    { clearEntry, entry, pushEntry, random, update, updateEdge },
-    focus,
-    keyboard,
-    store,
-    core,
-  ] = ['actions', 'focus', 'keyboard', 'store', 'core'].map(build);
+import { coreConfig as actionConfig } from '../store/actions';
+import { coreConfig as appConfig } from './app';
+import { coreConfig as inputConfig } from './input';
 
-  focus(() => keyboard.clear());
+export const RUN = 'F1Qh+f2XbxAheht97A/BINk3BomM3pz6E+/TtaAUBdo=';
 
-  // Prevent Default on certain keys
-  on('keydown', e => {
-    if(e.code === 'Escape')
-      document.activeElement.blur();
+export const coreConfig = {
+  ...actionConfig,
+  ...appConfig,
+  ...inputConfig,
 
-    const preventIt = [
-      e.code === 'Tab' && e.shiftKey === false,
-      e.code === 'Space' && document.activeElement.tagName !== 'INPUT',
-    ].find(value => value);
+  [RUN]: {
+    fn: ({ App, configureKeyboard, initialRemoteCalls }) => () => {
+      render(<App/>, document.getElementById('root'));
 
-    if(preventIt)
-      e.preventDefault();
-  });
+      console.log('[[ INIT Kitsune Web ]]');
+      console.log('Config:', env);
 
-  const tabKey = keyboard('Tab');
-  tabKey.output(value => update({ showLabels: value }));
+      configureKeyboard();
+      initialRemoteCalls();
+    },
+    bind: {
+      configureKeyboard: 'CONFIGURE_KEYBOARD',
+      initialRemoteCalls: 'INITIAL_REMOTE_CALLS',
+    },
+    inject: { App: 'APP' },
+  },
+  [CORE_SUBSYSTEMS]: {
+    fn: ({ remoteSystem }) => (_, output) => output([remoteSystem]),
+    inject: { remoteSystem: 'REMOTE_SYSTEM' },
+  },
 
-  const leftShiftKey = keyboard('ShiftLeft');
-  const shiftSwitch = Switch(leftShiftKey);
-  keyboard.output.down(shiftSwitch);
+  REMOTE_SYSTEM: {
+    fn: () => (_, output) => {
+      const webUrl = (env.secure ? 'https://' : 'http://') + env.kitsuneHost;
+      console.log('WEB URL:', webUrl);
+      output(HttpSystem(webUrl));
+    },
+  },
 
-  const neutralOutput = shiftSwitch.path(value => value === false);
-  const shiftOutput = shiftSwitch.path(value => value === true);
+  STORE: value(createStore(reducer)),
 
-  neutralOutput(key => {
-    if(document.activeElement.tagName === 'INPUT')
-      return;
+  FOCUS: value(Focus()),
+  KEYBOARD: value(Keyboard()),
 
-    if(/Backspace|Key.|Space/.test(key)) {
-      entry(key);
-    } else if(key === 'Enter') {
-      pushEntry();
-    } else if(key === 'Escape') {
-      clearEntry();
-    } else if(key === 'BracketLeft') {
-      updateEdge('head');
-    } else if(key === 'BracketRight') {
-      updateEdge('tail');
-    } else if(key === 'Backslash') {
-      core(LOOKUP_NATIVE_NAME, system => {
-        system(RANDOM, result => console.log(result));
+  INITIAL_REMOTE_CALLS: {
+    fn: ({ random, update }) => () => {
+      random(null, id => {
+        update({ selected: id });
+        toastr.info(`Random: ${id}`);
       });
-    }
-  });
 
-  shiftOutput(key => {
-    if(key === 'KeyN') {
-      const { entryList } = store.getState();
-      const latestEntry = entryList[entryList.length - 1];
-      core(LOOKUP_NATIVE_NAME, lookupNativeName => lookupNativeName(latestEntry, id => {
-        update({ selected: id || '' });
-      }));
-    } else if(key === 'KeyR') {
-      random();
-    } else if(key === 'KeyS') {
-      const { showLabels } = store.getState();
-      update({ showLabels: !showLabels });
-    }
-  });
+      // core(BUILT_IN_NODES, builtInNodes => builtInNodes(null, nodes => update({ nodes })));
+      // core(E(LIST_V, STRING), listStrings => listStrings(null, strings => update({ strings })));
+    },
+    bind: { random: RANDOM, update: 'ACTION_UPDATE' },
+  },
+
+  SOCKET: {
+    fn: () => (_, output = noOp) => {
+      const webSocketUrl = (env.secure ? 'wss://' : 'ws://') + env.kitsuneHost;
+
+      console.log('Connecting to WebSocket:', webSocketUrl);
+      const socket = BrowserSocket(webSocketUrl);
+
+      output(socket);
+    },
+  },
+
+  SOCKET_SYSTEM: {
+    fn: ({ core, socket }) => (_, output = noOp) => {
+      output(WebSocketSystem({ core, socket }));
+    },
+    bind: { core: CORE },
+    inject: { socket: 'SOCKET' },
+  },
+
+  SET_MY_ID: {
+    fn: () => (id, output = noOp) => {
+      console.log('I\'m setting my id:', id);
+      output(Math.floor(Math.random() * 100));
+    },
+  },
 };
-
-const initialRemoteCalls = () => {
-  const [{ update }, core] = ['actions', 'core'].map(build);
-
-  core(RANDOM, random => random(null, id => {
-    update({ selected: id });
-    toastr.info(`Random: ${id}`);
-  }));
-
-  // core(BUILT_IN_NODES, builtInNodes => builtInNodes(null, nodes => update({ nodes })));
-  // core(E(LIST_V, STRING), listStrings => listStrings(null, strings => update({ strings })));
-};
-
-const socketHandler = () => {
-  const socket = build('socket');
-
-  socket.output(msg => {
-    console.log('Socket Output:', msg);
-  });
-};
-
-const renderApp = () => {
-  const App = build('App');
-  render(<App/>, document.getElementById('root'));
-};
-
-const initialLogging = () => {
-  const config = build('config');
-
-  console.log('=== Kitsune Web Started ===');
-  console.log('Config:', config);
-};
-
-export const run = () => ([
-  configureKeyboard, initialRemoteCalls, socketHandler, renderApp, initialLogging,
-].forEach(fn => fn()));
