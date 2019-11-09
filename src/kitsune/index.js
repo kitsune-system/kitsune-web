@@ -41,10 +41,10 @@ export const coreConfig = {
   },
   [CORE_SUBSYSTEMS]: {
     fn: ({ remoteSystem }) => (_, output) => output([remoteSystem]),
-    inject: { remoteSystem: 'REMOTE_SYSTEM' },
+    inject: { remoteSystem: 'SOCKET_SYSTEM' },
   },
 
-  REMOTE_SYSTEM: {
+  HTTP_SYSTEM: {
     fn: () => (_, output) => {
       const webUrl = (env.secure ? 'https://' : 'http://') + env.kitsuneHost;
       console.log('WEB URL:', webUrl);

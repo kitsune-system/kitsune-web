@@ -30,14 +30,9 @@ export const coreConfig = {
   ACTION_UPDATE_EDGE: Action(field => ({ type: 'UPDATE_EDGE', field })),
 
   ACTION_RANDOM: {
-    fn: ({ random, socketSystem, update }) => () => {
-      socketSystem(RANDOM, random => random(null, id => {
-        console.log('RANDOM (from Socket):', id);
-      }));
-
+    fn: ({ random, update }) => () => {
       random(null, id => update({ selected: id }));
     },
     bind: { random: RANDOM, update: 'ACTION_UPDATE' },
-    inject: { socketSystem: 'SOCKET_SYSTEM' },
   },
 };
