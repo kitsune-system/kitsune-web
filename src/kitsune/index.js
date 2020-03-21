@@ -7,7 +7,6 @@ import { render } from 'react-dom';
 import toastr from 'toastr';
 
 import env from 'env/config';
-import createStore from 'env/create-store';
 
 import { reducer } from '../store/reducer';
 import { BrowserSocket } from './browser-socket';
@@ -51,8 +50,6 @@ export const coreConfig = {
       output(HttpSystem(webUrl));
     },
   },
-
-  STORE: value(createStore(reducer)),
 
   FOCUS: value(Focus()),
   KEYBOARD: value(Keyboard()),

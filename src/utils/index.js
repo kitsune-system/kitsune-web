@@ -1,11 +1,6 @@
-import _ from 'lodash';
-
 import bind from './bind';
-import linkState from './link-state';
 
-export { bind, linkState };
-
-export const mapWith = (input, map) => input.map(key => map[key]);
+export { bind };
 
 export const pipe = (...fns) => {
   return (...args) => {
@@ -17,17 +12,4 @@ export const pipe = (...fns) => {
 
     return value;
   };
-};
-
-export const superMap = (input, fn) => {
-  let result = null;
-
-  if(_.isPlainObject(input))
-    result = _.mapValues(input, fn);
-  else if(_.isArray(input))
-    result = _.map(input, fn);
-  else
-    result = fn(input);
-
-  return result;
 };

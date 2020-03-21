@@ -1,30 +1,61 @@
-import React, { createContext } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
-const defaultContext = 'NO CONTEXT!!';
+export const SystemContext = createContext();
 
-export const SystemContext = createContext(defaultContext);
-export const Provider = ({ children, system }) => (
-  <SystemContext.Provider value={system}>
+export const Provider = ({ children, register }) => (
+  // FIXME: Rename register
+  <SystemContext.Provider value={register}>
     {children}
   </SystemContext.Provider>
 );
 
-export const bind = (Component, bind = {}) => props => {
-  const bindSystems = system => {
-    const systems = {};
+export const connectOn = config => {
+  // Config
+  let systemIdPropName = 'systemId';
+  let rename = {};
 
-    Object.entries(bind).forEach(([name, systemId]) => {
-      systems[name] = (input, output) => {
-        system(systemId, sys => sys(input, output));
-      };
-    });
+  if(typeof config === 'string') {
+    systemIdPropName = config;
+  } else if(typeof config === 'object') {
+    systemIdPropName = config.systemIdPropName ? config.systemIdPropName : systemIdPropName;
+    rename = config.rename ? config.rename : rename;
+  }
 
-    return systems;
+  return Component => props => {
+    const [values, setValues] = useState({});
+    const update = delta => setValues(values => ({ ...values, ...delta }));
+
+    const register = useContext(SystemContext);
+    if(!register)
+      throw Error('SystemContext not found. Make sure a SystemContext.Provider exists higher in the heirarchy.');
+
+    const systemId = props[systemIdPropName];
+    if(systemId) {
+      useEffect(() => {
+        return register({
+          input: systemId,
+          onOutput: values => {
+            const namedValues = {};
+
+            // Rename
+            Object.entries(values).forEach(([name, value]) => {
+              if(name in rename)
+                name = rename[name];
+
+              namedValues[name] = value;
+            });
+
+            update(namedValues);
+          },
+          onError: error => {
+            throw new Error(`Register error: ${JSON.stringify(error)}`);
+          },
+        });
+      }, [systemId, props]);
+    }
+
+    return <Component {...values} {...props}/>;
   };
-
-  return (
-    <SystemContext.Consumer>
-      {system => <Component {...bindSystems(system)} {...props}/>}
-    </SystemContext.Consumer>
-  );
 };
+
+export const connect = connectOn();

@@ -4,16 +4,15 @@ import { LOOKUP_NATIVE_NODE } from '@kitsune-system/common';
 export const coreConfig = {
   CONFIGURE_KEYBOARD: {
     bind: {
-      random: 'ACTION_RANDOM', update: 'ACTION_UPDATE',
-      entry: 'ACTION_ENTRY', clearEntry: 'ACTION_CLEAR_ENTRY',
-      pushEntry: 'ACTION_PUSH_ENTRY', updateEdge: 'ACTION_UPDATE_EDGE',
-      lookupNativeName: LOOKUP_NATIVE_NODE,
+      random: 'ACTION_RANDOM', update: 'ACTION_UPDATE', entry: 'ACTION_ENTRY',
+      clearEntry: 'ACTION_CLEAR_ENTRY', pushEntry: 'ACTION_PUSH_ENTRY',
+      updateEdge: 'ACTION_UPDATE_EDGE', lookupNativeName: LOOKUP_NATIVE_NODE,
+      writeEdge: 'ACTION_WRITE_EDGE',
     },
     inject: { focus: 'FOCUS', keyboard: 'KEYBOARD', store: 'STORE' },
     fn: ({
-      focus, keyboard, store, update,
-      random, entry, clearEntry, pushEntry, updateEdge,
-      lookupNativeName,
+      focus, keyboard, store, update, random, entry, clearEntry, pushEntry,
+      updateEdge, lookupNativeName, writeEdge,
     }) => () => {
       focus(() => keyboard.clear());
 
@@ -56,7 +55,7 @@ export const coreConfig = {
         else if(key === 'BracketRight')
           updateEdge('tail');
         else if(key === 'Backslash')
-          lookupNativeName('RANDOM', result => console.log(result));
+          writeEdge();
       });
 
       shiftOutput(key => {

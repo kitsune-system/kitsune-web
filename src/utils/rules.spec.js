@@ -13,6 +13,7 @@ describe('Rules({...})', () => {
     });
 
     let rule = rules('even !negative');
+
     rule(10).should.be.true();
     rule(15).should.be.false();
     rule(-10).should.be.false();
